@@ -26,6 +26,9 @@ class Vector2D():
         Returns a Vector2D object with
          - x range between range_x[0] and range_x[1]
          - y range between range_y[0] and range_y[1]
+
+        use like this:
+            vec = Vector2D.random_pos(range_x, range_y)
         """
 
         if not(type(range_x) in [tuple, list] and len(range_x) >= 2) : raise ValueError('Please specify a range using a tuple or a list')
@@ -34,7 +37,12 @@ class Vector2D():
         return Vector2D(randint(range_x[0], range_x[1]), randint(range_y[0], range_y[1]))
 
     def random_unit():
-        """Returns a random unit vector"""
+        """
+        Returns a random unit vector
+
+        use like this:
+            vec = Vector2D.random_unit()
+        """
         vec = Vector2D(randint(-10000, 10000), randint(-10000, 10000))
         vec.normalise()
         return vec
@@ -424,3 +432,22 @@ class Vector2D():
             out_val = wanted_range_min+val
             temp.append(out_val)
         self.x, self.y = temp
+
+    def dist(self, other_vec, use_sqrt=True):
+        """
+        Finds the distance between this and another vector
+
+        changing the use_sqrt parameter from True (default) to False will disable the square rooting of the final answer
+        will make the distance finding faster, however, the returned value will be the sqare of the distance 
+        """
+        if type(other_vec) != Vector2D:
+            raise ValueError("Please pass in a Vector2D object")
+
+        dist = ((other_vec.x - self.x)**2 + (other_vec.y - self.y)**2)
+
+        if use_sqrt:
+            return sqrt(dist)
+        else:
+            return dist
+
+
