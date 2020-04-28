@@ -1,470 +1,543 @@
-from math import sqrt, cos, sin, radians, atan2, degrees
+from math import atan2, sqrt, degrees, radians, cos, sin
 from random import randint
 
-class Vector2D():
-    def __init__(self, *args):
-        """
-        A Vector Class
-        to create the object, pass in one of the following arguments
-            >> Vector2D() returns Vecto2D(0, 0)
-            >> Vector2D(5) returns Vecto2D(5, 5)
-            >> Vector2D(5, 2) returns Vecto2D(5, 2)
-        
-        The Vector class has a "data" dict variable incase you need to store aditional data such as colours or names
-        """
-        if len(args) == 0:
-            self.x = 0
-            self.y = 0
-        elif len(args) == 1:
-            self.x = args[0]
-            self.y = args[0]
-        else:
-            self.x = args[0]
-            self.y = args[1]
-        
-        self.data = {}
+class Documentation():
+    """Used to add documentation to Vector2D and Vector3D classes"""
 
-# Automatic Vector Creation Methods
-    def random_pos(range_x, range_y):
+    def random_pos():
         """
-        Returns a Vector2D object with
-         - x range between range_x[0] and range_x[1]
-         - y range between range_y[0] and range_y[1]
+        Returns a Vector that will have a random postition within the specified range
 
-        use like this:
-            vec = Vector2D.random_pos(range_x, range_y)
+        2D
+            Vector2D(10) --> x,y between 0, 10
+            Vector2D([-10, 10]) --> x,y between -10, 10
+            Vector2D(5, 10) --> x between 0, 5 and y between 0, 10
+            Vector2D([-5, 5], [-10, 10]) --> x between -5, 5 and y between -10, 10
+
+        3D
+            Vector2D(10) --> x,y,z between 0, 10
+            Vector2D([-10, 10]) --> x,y,z between -10, 10
+            Vector2D(5, 10, 20) --> x between 0, 5 and y between 0, 10 and z between 0, 20
+            Vector2D([-5, 5], [-10, 10], [-20, 20]) --> x between -5, 5 and y between -10, 10 and z between -20, 20
         """
-
-        if not(type(range_x) in [tuple, list] and len(range_x) >= 2) : raise ValueError('Please specify a range using a tuple or a list')
-        if not(type(range_y) in [tuple, list] and len(range_y) >= 2) : raise ValueError('Please specify a range using a tuple or a list')
-
-        return Vector2D(randint(range_x[0], range_x[1]), randint(range_y[0], range_y[1]))
 
     def random_unit():
         """
-        Returns a random unit vector
-
-        use like this:
-            vec = Vector2D.random_unit()
-        """
-        vec = Vector2D(randint(-10000, 10000), randint(-10000, 10000))
-        vec.normalise()
-        return vec
-
-# mathematical methods (method followed by magic method)
-    def add(self, value, x_index=0, y_index=1):
-        """
-        Adds a value to this vector, acceptable values:
-        INT or FlOAT --> adds the value to both x and y
-            self.x += value
-            self.y += value
-
-        VECTOR2D --> adds the vector's x and y to this vector' x and y
-            self.x += value.x
-            self.y += value.y
-
-        TUPLE or LIST --> adds the first 2 elements of the array to x and y, can be changed by altering the x_index and y_index values
-            self.x += value[x_index (default: 0) ]
-            self.y += value[y_index (default: 1) ]
-        """
-        type_of_val = type(value)
-
-        if type_of_val in [int, float]:
-            self.x += value
-            self.y += value
-
-        elif type_of_val == Vector2D:
-            self.x += value.x
-            self.y += value.y
-
-        elif type_of_val in [tuple, list]:
-            self.x += value[x_index]
-            self.y += value[y_index]
-
-        else:
-            raise ValueError('Please specify a valid value')
-
-    def __add__(self, value, x_index=0, y_index=1):
-        """
-        Adds a value to this vector, acceptable values:
-        INT or FlOAT --> adds the value to both x and y
-            returns Vector2D(self.x + value, self.y + value)
-
-        VECTOR2D --> adds the vector's x and y to this vector' x and y
-            returns Vector2D(self.x + value.x, self.y + value.y)
-
-        TUPLE or LIST --> adds the first 2 elements of the array to x and y, can be changed by altering the x_index and y_index values
-            returns Vector2D(self.x + value[x_index], self.y + value[y_index])
-        """
-        type_of_val = type(value)
-        if type_of_val in [int, float]:
-            return Vector2D(self.x + value, self.y + value)
-
-        elif type_of_val == Vector2D:
-            return Vector2D(self.x + value.x, self.y + value.y)
-
-        elif type_of_val in [tuple, list]:
-            return Vector2D(self.x + value[x_index], self.y + value[y_index])
-
-        else:
-            raise ValueError('Please specify a valid value')
-
-    def sub(self, value, x_index=0, y_index=1):
-        """
-        Subtracts a value from this vector, acceptable values:
-        INT or FlOAT --> Subtracts the value to both x and y
-            self.x -= value
-            self.y -= value
-
-        VECTOR2D --> Subtracts the passed in vector's x and y from this vector' x and y
-            self.x -= value.x
-            self.y -= value.y
-
-        TUPLE or LIST --> Subtracts the first 2 elements of the array to x and y, can be changed by altering the x_index and y_index values
-            self.x -= value[x_index (default: 0) ]
-            self.y -= value[y_index (default: 1) ]
-        """
-        type_of_val = type(value)
-
-        if type_of_val in [int, float]:
-            self.x -= value
-            self.y -= value
-
-        elif type_of_val == Vector2D:
-            self.x -= value.x
-            self.y -= value.y
-
-        elif type_of_val in [tuple, list]:
-            self.x -= value[x_index]
-            self.y -= value[y_index]
-            
-        else:
-            raise ValueError('Please specify a valid value')
-
-    def __sub__(self, value, x_index=0, y_index=1):
-        """
-        Subtracts a value to this vector, acceptable values:
-        INT or FlOAT --> Subtracts the value to both x and y
-            returns Vector2D(self.x - value, self.y - value)
-
-        VECTOR2D --> Subtracts the vector's x and y to this vector' x and y
-            returns Vector2D(self.x - value.x, self.y - value.y)
-
-        TUPLE or LIST --> Subtracts the first 2 elements of the array to x and y, can be changed by altering the x_index and y_index values
-            returns Vector2D(self.x - value[0], self.y - value[1])
+        Returns a random unit Vector
         """
 
-        type_of_val = type(value)
-        if type_of_val in [int, float]:
-            return Vector2D(self.x - value, self.y - value)
-
-        elif type_of_val == Vector2D:
-            return Vector2D(self.x - value.x, self.y - value.y)
-
-        elif type_of_val in [tuple, list]:
-            return Vector2D(self.x - value[x_index], self.y - value[y_index])
-            
-        else:
-            raise ValueError('Please specify a valid value')
-
-    def mult(self, value, x_index=0, y_index=1):
+    def from_angle():
         """
-        Multiplies a value to this vector, acceptable values:
-        INT or FlOAT --> Multiplies the value to both x and y
-            self.x *= value
-            self.y *= value
-
-        VECTOR2D --> Multiplies the vector's x and y to this vector' x and y
-            self.x *= value.x
-            self.y *= value.y
-
-        TUPLE or LIST --> Multiplies the first 2 elements of the array to x and y, can be changed by altering the x_index and y_index values
-            self.x *= value[x_index (default: 0) ]
-            self.y *= value[y_index (default: 1) ]
-        """
-        type_of_val = type(value)
-
-        if type_of_val in [int, float]:
-            self.x *= value
-            self.y *= value
-
-        elif type_of_val == Vector2D:
-            self.x *= value.x
-            self.y *= value.y
-
-        elif type_of_val in [tuple, list]:
-            self.x *= value[x_index]
-            self.y *= value[y_index]
-            
-        else:
-            raise ValueError('Please specify a valid value')
-
-    def __mul__(self, value, x_index=0, y_index=1):
-        """
-        Multiplies a value to this vector, acceptable values:
-        INT or FlOAT --> Multiplies the value to both x and y
-            returns Vector2D(self.x * value, self.y * value)
-
-        VECTOR2D --> Multiplies the vector's x and y to this vector' x and y
-            returns Vector2D(self.x * value.x, self.y * value.y)
-
-        TUPLE or LIST --> Multiplies the first 2 elements of the array to x and y, can be changed by altering the x_index and y_index values
-            returns Vector2D(self.x * value[x_index], self.y * value[y_index])
+        Generate a unit vector from an angle that will have a heading towards that angle
         """
 
-        type_of_val = type(value)
-        if type_of_val in [int, float]:
-            return Vector2D(self.x * value, self.y * value)
-
-        elif type_of_val == Vector2D:
-            return Vector2D(self.x * value.x, self.y * value.y)
-
-        elif type_of_val in [tuple, list]:
-            return Vector2D(self.x * value[x_index], self.y * value[y_index])
-            
-        else:
-            raise ValueError('Please specify a valid value')
-
-    def div(self, value, x_index=0, y_index=1):
+    def dist():
         """
-        Divides a value to this vector, acceptable values:
-        INT or FlOAT --> Divides the value to both x and y
-            self.x /= value
-            self.y /= value
+        Returns the distance between this vector and another (or tuple/list)
 
-        VECTOR2D --> Divides the vector's x and y to this vector' x and y
-            self.x /= value.x
-            self.y /= value.y
-
-        TUPLE or LIST --> Divides the first 2 elements of the array to x and y, can be changed by altering the x_index and y_index values
-            self.x /= value[x_index (default: 0) ]
-            self.y /= value[y_index (default: 1) ]
-        """
-        type_of_val = type(value)
-
-        if type_of_val in [int, float]:
-            self.x /= value
-            self.y /= value
-
-        elif type_of_val == Vector2D:
-            self.x /= value.x
-            self.y /= value.y
-
-        elif type_of_val in [tuple, list]:
-            self.x /= value[x_index]
-            self.y /= value[y_index]
-            
-        else:
-            raise ValueError('Please specify a valid value')
-
-    def __div__(self, value, x_index=0, y_index=1):
-        """
-        Divides a value to this vector, acceptable values:
-        INT or FlOAT --> Divides the value to both x and y
-            returns Vector2D(self.x / value, self.y / value)
-
-        VECTOR2D --> Divides the vector's x and y to this vector' x and y
-            returns Vector2D(self.x / value.x, self.y / value.y)
-
-        TUPLE or LIST --> Divides the first 2 elements of the array to x and y
-            returns Vector2D(self.x / value[x_index], self.y / value[y_index])
+        vec.dist(other_vec) --> distance between vec and other_vec
+        vec.dist([0, 5]) --> distance between vec and the x0y5 position
         """
 
-        type_of_val = type(value)
-        if type_of_val in [int, float]:
-            return Vector2D(self.x / value, self.y / value)
-
-        elif type_of_val == Vector2D:
-            return Vector2D(self.x / value.x, self.y / value.y)
-
-        elif type_of_val in [tuple, list]:
-            return Vector2D(self.x / value[x_index], self.y / value[y_index])
-            
-        else:
-            raise ValueError('Please specify a valid value')
-
-    def pow(self, value, x_index=0, y_index=1):
+    def set():
         """
-        Raises a value to this vector, acceptable values:
-        INT or FlOAT --> Raises the value to both x and y
-            self.x **= value
-            self.y **= value
-
-        VECTOR2D --> Raises the vector's x and y to this vector' x and y
-            self.x **= value.x
-            self.y **= value.y
-
-        TUPLE or LIST --> Raises the first 2 elements of the array to x and y
-            self.x **= value[x_index (default: 0) ]
-            self.y **= value[y_index (default: 1) ]
+        sets the Vectors x,y,(z) parameters
         """
 
-        type_of_val = type(value)
-        if type_of_val in [int, float]:
-            self.x **= value
-            self.y **= value
-
-        elif type_of_val == Vector2D:
-            self.x **= value.x
-            self.y **= value.y
-
-        elif type_of_val in [tuple, list]:
-            self.x **= value[x_index]
-            self.y **= value[y_index]
-            
-        else:
-            raise ValueError('Please specify a valid value')
-
-    def __pow__(self, value, x_index=0, y_index=1):
+    def get():
         """
-        Raises this vector's values to the power of the value, acceptable values:
-        INT or FlOAT --> Raises the value to both x and y
-            returns Vector2D(self.x**value, self.y**value)
-
-        VECTOR2D --> Raises the vector's x and y to this vector' x and y
-            returns Vector2D(self.x**value[x_index], self.y**value[y_index])
-
-        TUPLE or LIST --> Raises the first 2 elements of the array to x and y, can be changed by altering the x_index and y_index values
-            returns Vector2D(self.x**value.x, self.y**value.y)
-        """
-        type_of_val = type(value)
-
-        if type_of_val in [int, float]:
-            return Vector2D(self.x**value, self.y**value)
-       
-        elif type_of_val in [tuple, list]:
-            return Vector2D(self.x**value[x_index], self.y**value[y_index])
-       
-        elif type_of_val == Vector2D:
-            return Vector2D(self.x**value.x, self.y**value.y)
-            
-        else:
-            raise ValueError('Please specify a valid value')
-
-# Operator methods
-    def __eq__(self, value):
-        """Checks for x and y equality between 2 vectors, only returns true if x1==x2 AND y1==y2"""
-        type_of_val = type(value)
-
-        if type_of_val == Vector2D:
-            return self.x == value.x and self.y == value.y
-            
-        else:
-            raise ValueError('Please specify a valid value')
-
-# Data type methods
-    def __str__(self):
-        """Returns a string in the format of <X: {self.x} | Y: {self.y}>"""
-        return f'X: {self.x} | Y: {self.y}'
-
-# Other Methods
-    # english and american version : )
-    def normalise(self):
-        """Normilises this vector to a unit vector"""
-        mag = self.get_magnitude()
-
-        self.x /= mag
-        self.y /= mag
-    def normalize(self):
-        """Normilises this vector to a unit vector"""
-        self.normalise()
-
-    def get_magnitude(self):
-        """Returns the magnitude of this vector"""
-        return sqrt(self.x**2 + self.y**2)
-
-    def limit(self, value):
-        """Limits x and y to a range of -value to value, takes effect once and therefore will need to be called everytime the effect is required"""
-
-        if type(value) not in [int, float]:
-            raise ValueError('Please specify a valid value')
-
-        if self.x > value:
-            self.x = value
-        if self.x < -value:
-            self.x = -value
-        if self.y > value:
-            self.y = value
-        if self.y < -value:
-            self.y = -value
-
-    def set(self, *args):
-        """
-        Sets the x and y to the specified values
-        pass the values based on the list bellow
-            >> Vector2D() sets the x and y to Vecto2D(0, 0)
-            >> Vector2D(5) sets the x and y to Vecto2D(5, 5)
-            >> Vector2D(5, 2) sets the x and y to Vecto2D(5, 2)
+        Returns a list containing the vectors position
         """
 
-        for value in args:
-            if type(value) not in [int, float]:
-                raise ValueError('Please specify a valid value')
+    def get_heading_angle():
+        """
+        returns angle offset from the x axis
+        """
 
+    def copy():
+        """
+        Returns an identical copy of this vector
+        """
+
+    def get_magnitude():
+        """
+        returns the magnitude of this vector
+        """
+
+    def normalise():
+        """
+        Normalises this vector to make its magnitude 1
+        """
+
+    def normalize():
+        """
+        Normalizes this vector to make its magnitude 1
+        """
+
+class Vector2D(Documentation):
+    def __init__(self, *args):
         if len(args) == 0:
             self.x = 0
             self.y = 0
         elif len(args) == 1:
-            self.x = args[0]
-            self.y = args[0]
-        else:
+            if type(args) in [list, tuple]:
+                self.x = args[0][0]
+                self.y = args[0][1]
+            else:
+                self.x = args[0]
+                self.y = args[0]
+        elif len(args) == 2:
             self.x = args[0]
             self.y = args[1]
 
-    def clear(self):
-        """Sets x and y to 0"""
-        self.x = 0
-        self.y = 0
+        self.data = {}
 
-    def get_xy(self, mode=float):
-        """Returns a tuple using the mode passed in, can be INT, FLOAT, BIN, STR, default is FLOAT"""
+    #region automatic creation methods
 
-        if mode not in [int, float, bin, str]:
-            raise ValueError('Please specify a valid mode')
+    def random_pos(self, *args):
+        if len(args[0]) == 1:
+            if type(args[0]) in [int, float]:
+                max_pos = args[0]
+                return Vector2D(randint(0, max_pos), randint(0, max_pos))
+            if type(args[0]) in [tuple, list]:
+                min_pos = args[0]
+                max_pos = args[1]
+                return Vector2D(randint(min_pos, max_pos), randint(min_pos, max_pos))
+        if len(args[0]) == 2:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
+                max_pos_x = args[0]
+                max_pos_y = args[1]
+                return Vector2D(randint(0, max_pos), randint(0, max_pos_y))
+            if type(args[0]) in [tuple, list] and type(args[1]) in [tuple, list]:
+                min_pos_x = args[0][0]
+                max_pos_x = args[0][1]
+                min_pos_y = args[1][0]
+                max_pos_y = args[1][1]
+                return Vector2D(randint(min_pos_x, max_pos_x), randint(min_pos_y, max_pos_y))
 
-        return (mode(self.x), mode(self.y))
+    def random_unit(self):
+        vec = Vector2D.random_pos([-100000, 100000])
+        vec.normalise()
+        return vec
 
-    def map_to_range(self, current_range_min, current_range_max, wanted_range_min, wanted_range_max):
-        """Maps x and y from a range to another, desired range"""
-        val = [self.x, self.y]
-        temp = []
-        for i in val:
-            out_range = wanted_range_max - wanted_range_min
-            in_range = current_range_max - current_range_min
-            in_val = i - current_range_min
-            val=(float(in_val)/in_range)*out_range
-            out_val = wanted_range_min+val
-            temp.append(out_val)
-        self.x, self.y = temp
+    def from_angle(self, angle, mode='deg'):
+        if mode == 'deg':
+            x = cos(radians(angle))
+            y = sin(radians(angle))
+        if mode == 'rad':
+            x = cos(angle)
+            y = sin(angle)
 
-    def dist(self, other_vec, use_sqrt=True):
-        """
-        Finds the distance between this and another vector
+        return Vector2D(x, y)
 
-        changing the use_sqrt parameter from True (default) to False will disable the square rooting of the final answer
-        will make the distance finding faster, however, the returned value will be the sqare of the distance 
-        """
-        if type(other_vec) != Vector2D:
-            raise ValueError("Please pass in a Vector2D object")
+    #endregion
 
-        dist = ((other_vec.x - self.x)**2 + (other_vec.y - self.y)**2)
+    #region custom other methods
 
-        if use_sqrt:
-            return sqrt(dist)
-        else:
-            return dist
+    def dist(self, other, use_sqrt=True):
+        d = 0
+        if type(other) == Vector2D:
+            d = (other.x - self.x)**2 + (other.y - self.y)**2
+        if type(other) in [tuple, list]:
+            d = (other[0] - self.x)**2 + (other[1] - self.y)**2
 
-    def copy(self):
-        """Returns a copy of this vector"""
-        return Vector2D(self.x, self.y)
+        if use_sqrt : return sqrt(d)
+        else : return d
 
-    def get_heading(self, mode='deg'):
-        """Returns the angle offset from the x axis, specifying the mode will return the angle in degrees ('deg') or radians ('rad')"""
+    def set(self, *args):
+        if len(args) == 0:
+            self.x = 0
+            self.y = 0
+        elif len(args) == 1:
+            if type(args) in [list, tuple]:
+                self.x = args[0][0]
+                self.y = args[0][1]
+            else:
+                self.x = args[0]
+                self.y = args[0]
+        elif len(args) == 2:
+            self.x = args[0]
+            self.y = args[1]
+
+    def get(self, mode=int):
+        return [mode(self.x), mode(self.y)]
+
+    def get_heading_angle(self, mode='deg'):
         a = atan2(self.x, self.y)
+
         if mode == 'deg' : return degrees(a)
         if mode == 'rad' : return a
 
-    def flip(self):
-        """Multiplies both X and Y by -1 to mirror the vector"""
-        self.x *= -1
-        self.y *= -1
+    def copy(self):
+        return Vector2D(self.x, self.y)
+
+    def get_magnitude(self):
+        return sqrt(self.x**2 + self.y**2)
+
+    def normalise(self):
+        mag = self.get_magnitude()
+        self.div(mag)
+    def normalize(self):
+        self.normalise()
+
+    #endregion
+
+    #region custom mathematical methods
+
+    def add(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                self.x += args[0]
+                self.y += args[0]
+            if type(args[0]) in [tuple, list]:
+                self.x += args[0]
+                self.y += args[1]
+            if type(args[0]) == Vector2D:
+                self.x += args[0].x
+                self.y += args[0].y
+        if len(args) == 2:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
+                self.x += args[0]
+                self.y += args[1]
+
+    def sub(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                self.x -= args[0]
+                self.y -= args[0]
+            if type(args[0]) in [tuple, list]:
+                self.x -= args[0]
+                self.y -= args[1]
+            if type(args[0]) == Vector2D:
+                self.x -= args[0].x
+                self.y -= args[0].y
+        if len(args) == 2:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
+                self.x -= args[0]
+                self.y -= args[1]
+
+    def mult(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                self.x *= args[0]
+                self.y *= args[0]
+            if type(args[0]) in [tuple, list]:
+                self.x *= args[0]
+                self.y *= args[1]
+            if type(args[0]) == Vector2D:
+                self.x *= args[0].x
+                self.y *= args[0].y
+        if len(args) == 2:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
+                self.x *= args[0]
+                self.y *= args[1]
+
+    def div(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                self.x /= args[0]
+                self.y /= args[0]
+            if type(args[0]) in [tuple, list]:
+                self.x /= args[0]
+                self.y /= args[1]
+            if type(args[0]) == Vector2D:
+                self.x /= args[0].x
+                self.y /= args[0].y
+        if len(args) == 2:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
+                self.x /= args[0]
+                self.y /= args[1]
+
+    #endregion
+
+    #region magic methods
+
+    def __add__(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                return Vector2D(self.x + args[0], self.y + args[0])
+            if type(args[0]) in [tuple, list]:
+                return Vector2D(self.x + args[0], self.y + args[1])
+            if type(args[0]) == Vector2D:
+                return Vector2D(self.x + args[0].x, self.y + args[0].y)
+        if len(args) == 2:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
+                return Vector2D(self.x + args[0], self.y + args[1])
+
+    def __sub__(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                return Vector2D(self.x - args[0], self.y - args[0])
+            if type(args[0]) in [tuple, list]:
+                return Vector2D(self.x - args[0], self.y - args[1])
+            if type(args[0]) == Vector2D:
+                return Vector2D(self.x - args[0].x, self.y - args[0].y)
+        if len(args) == 2:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
+                return Vector2D(self.x - args[0], self.y - args[1])
+
+    def __mult__(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                return Vector2D(self.x / args[0], self.y / args[0])
+            if type(args[0]) in [tuple, list]:
+                return Vector2D(self.x / args[0], self.y / args[1])
+            if type(args[0]) == Vector2D:
+                return Vector2D(self.x / args[0].x, self.y / args[0].y)
+        if len(args) == 2:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
+                return Vector2D(self.x / args[0], self.y / args[1])
+
+    def __div__(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                return Vector2D(self.x / args[0], self.y / args[0])
+            if type(args[0]) in [tuple, list]:
+                return Vector2D(self.x / args[0], self.y / args[1])
+            if type(args[0]) == Vector2D:
+                return Vector2D(self.x / args[0].x, self.y / args[0].y)
+        if len(args) == 2:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
+                return Vector2D(self.x / args[0], self.y / args[1])
+
+    #endregion
+
+class Vector3D(Documentation):
+    def __init__(self, *args):
+        if len(args) == 0:
+            self.x = 0
+            self.y = 0
+            self.z = 0
+        elif len(args) == 1:
+            if type(args) in [list, tuple]:
+                self.x = args[0][0]
+                self.y = args[0][1]
+                self.z = args[0][2]
+            else:
+                self.x = args[0]
+                self.y = args[0]
+                self.z = args[0]
+        elif len(args) == 3:
+            self.x = args[0]
+            self.y = args[1]
+            self.z = args[2]
+
+        self.data = {}
+
+    #region automatic creation methods
+
+    def random_pos(self, *args):
+        if len(args[0]) == 1:
+            if type(args[0]) in [int, float]:
+                max_pos = args[0]
+                return Vector2D(randint(0, max_pos), randint(0, max_pos), randint(0, max_pos))
+            if type(args[0]) in [tuple, list]:
+                min_pos = args[0]
+                max_pos = args[1]
+                return Vector2D(randint(min_pos, max_pos), randint(min_pos, max_pos), randint(min_pos, max_pos))
+        if len(args[0]) == 3:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
+                max_pos_x = args[0]
+                max_pos_y = args[1]
+                max_pos_z = args[2]
+                return Vector2D(randint(0, max_pos), randint(0, max_pos_y), randint(0, max_pos_z))
+            if type(args[0]) in [tuple, list] and type(args[1]) in [tuple, list] and type(args[2]) in [tuple, list]:
+                min_pos_x = args[0][0]
+                max_pos_x = args[0][1]
+                min_pos_y = args[1][0]
+                max_pos_y = args[1][1]
+                min_pos_z = args[2][0]
+                max_pos_z = args[2][1]
+                return Vector2D(randint(min_pos_x, max_pos_x), randint(min_pos_y, max_pos_y), randint(min_pos_z, max_pos_z))
+
+    def random_unit(self):
+        vec = Vector2D.random_pos([-100000, 100000])
+        vec.normalise()
+        return vec
+
+    #endregion
+
+    #region custom other methods
+
+    def dist(self, other, use_sqrt=True):
+        d = 0
+        if type(other) == Vector3D:
+            d = (other.x - self.x)**2 + (other.y - self.y)**2 + (other.z - self.z)**2
+        if type(other) in [tuple, list]:
+            d = (other[0] - self.x)**2 + (other[1] - self.y)**2 + (other[2] - self.z)**2
+
+        if use_sqrt : return sqrt(d)
+        else : return d
+
+    def set(self, *args):
+        if len(args) == 0:
+            self.x = 0
+            self.y = 0
+            self.z = 0
+        elif len(args) == 1:
+            if type(args) in [list, tuple]:
+                self.x = args[0][0]
+                self.y = args[0][1]
+                self.z = args[0][2]
+            else:
+                self.x = args[0]
+                self.y = args[0]
+                self.z = args[0]
+        elif len(args) == 3:
+            self.x = args[0]
+            self.y = args[1]
+            self.z = args[2]
+
+    def get(self, mode=int):
+        return [mode(self.x), mode(self.y), mode(self.z)]
+
+    def copy(self):
+        return Vector3D(self.x, self.y, self.z)
+
+    def get_magnitude(self):
+        return sqrt(self.x**2 + self.y**2 + self.z**2)
+
+    def normalise(self):
+        mag = self.get_magnitude()
+        self.div(mag)
+    def normalize(self):
+        self.normalise()
+
+    #endregion
+
+    #region custom mathematical methods
+
+    def add(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                self.x += args[0]
+                self.y += args[0]
+                self.y += args[0]
+            if type(args[0]) in [tuple, list]:
+                self.x += args[0]
+                self.y += args[1]
+                self.y += args[2]
+            if type(args[0]) == Vector3D:
+                self.x += args[0].x
+                self.y += args[0].y
+                self.y += args[0].y
+        if len(args) == 3:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
+                self.x += args[0]
+                self.y += args[1]
+                self.z += args[2]
+
+    def sub(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                self.x -= args[0]
+                self.y -= args[0]
+                self.y -= args[0]
+            if type(args[0]) in [tuple, list]:
+                self.x -= args[0]
+                self.y -= args[1]
+                self.y -= args[2]
+            if type(args[0]) == Vector3D:
+                self.x -= args[0].x
+                self.y -= args[0].y
+                self.y -= args[0].y
+        if len(args) == 3:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
+                self.x -= args[0]
+                self.y -= args[1]
+                self.z -= args[2]
+
+    def mult(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                self.x *= args[0]
+                self.y *= args[0]
+                self.y *= args[0]
+            if type(args[0]) in [tuple, list]:
+                self.x *= args[0]
+                self.y *= args[1]
+                self.y *= args[2]
+            if type(args[0]) == Vector3D:
+                self.x *= args[0].x
+                self.y *= args[0].y
+                self.y *= args[0].y
+        if len(args) == 3:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
+                self.x *= args[0]
+                self.y *= args[1]
+                self.z *= args[2]
+
+    def div(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                self.x /= args[0]
+                self.y /= args[0]
+                self.y /= args[0]
+            if type(args[0]) in [tuple, list]:
+                self.x /= args[0]
+                self.y /= args[1]
+                self.y /= args[2]
+            if type(args[0]) == Vector3D:
+                self.x /= args[0].x
+                self.y /= args[0].y
+                self.y /= args[0].y
+        if len(args) == 3:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
+                self.x /= args[0]
+                self.y /= args[1]
+                self.z /= args[2]
+
+    #endregion
+
+    #region magic methods
+
+    def __add__(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                return Vector3D(self.x + args[0], self.y + args[0], self.z + args[0])
+            if type(args[0]) in [tuple, list]:
+                return Vector3D(self.x + args[0], self.y + args[1], self.z + args[2])
+            if type(args[0]) == Vector3D:
+                return Vector3D(self.x + args[0].x, self.y + args[0].y, self.z + args[0].z)
+        if len(args) == 3:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
+                return Vector3D(self.x + args[0], self.y + args[1], self.z + args[2])
+
+    def __sub__(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                return Vector3D(self.x - args[0], self.y - args[0], self.z - args[0])
+            if type(args[0]) in [tuple, list]:
+                return Vector3D(self.x - args[0], self.y - args[1], self.z - args[2])
+            if type(args[0]) == Vector3D:
+                return Vector3D(self.x - args[0].x, self.y - args[0].y, self.z - args[0].z)
+        if len(args) == 3:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
+                return Vector3D(self.x - args[0], self.y - args[1], self.z - args[2])
+
+    def __mult__(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                return Vector3D(self.x * args[0], self.y * args[0], self.z * args[0])
+            if type(args[0]) in [tuple, list]:
+                return Vector3D(self.x * args[0], self.y * args[1], self.z * args[2])
+            if type(args[0]) == Vector3D:
+                return Vector3D(self.x * args[0].x, self.y * args[0].y, self.z * args[0].z)
+        if len(args) == 3:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
+                return Vector3D(self.x * args[0], self.y * args[1], self.z * args[2])
+
+    def __div__(self, *args):
+        if len(args) == 1:
+            if type(args[0]) in [int, float]:
+                return Vector3D(self.x / args[0], self.y / args[0], self.z / args[0])
+            if type(args[0]) in [tuple, list]:
+                return Vector3D(self.x / args[0], self.y / args[1], self.z / args[2])
+            if type(args[0]) == Vector3D:
+                return Vector3D(self.x / args[0].x, self.y / args[0].y, self.z / args[0].z)
+        if len(args) == 3:
+            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
+                return Vector3D(self.x / args[0], self.y / args[1], self.z / args[2])
+
+    #endregion
+
