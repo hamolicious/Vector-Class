@@ -412,15 +412,15 @@ class Vector3D(Documentation):
             if type(args[0]) in [int, float]:
                 self.x += args[0]
                 self.y += args[0]
-                self.y += args[0]
+                self.z += args[0]
             if type(args[0]) in [tuple, list]:
                 self.x += args[0]
                 self.y += args[1]
-                self.y += args[2]
+                self.z += args[2]
             if type(args[0]) == Vector3D:
                 self.x += args[0].x
                 self.y += args[0].y
-                self.y += args[0].y
+                self.z += args[0].z
         if len(args) == 3:
             if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
                 self.x += args[0]
@@ -436,11 +436,11 @@ class Vector3D(Documentation):
             if type(args[0]) in [tuple, list]:
                 self.x -= args[0]
                 self.y -= args[1]
-                self.y -= args[2]
+                self.z -= args[2]
             if type(args[0]) == Vector3D:
                 self.x -= args[0].x
                 self.y -= args[0].y
-                self.y -= args[0].y
+                self.z -= args[0].z
         if len(args) == 3:
             if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
                 self.x -= args[0]
@@ -452,15 +452,15 @@ class Vector3D(Documentation):
             if type(args[0]) in [int, float]:
                 self.x *= args[0]
                 self.y *= args[0]
-                self.y *= args[0]
+                self.z *= args[0]
             if type(args[0]) in [tuple, list]:
                 self.x *= args[0]
                 self.y *= args[1]
-                self.y *= args[2]
+                self.z *= args[2]
             if type(args[0]) == Vector3D:
                 self.x *= args[0].x
                 self.y *= args[0].y
-                self.y *= args[0].y
+                self.z *= args[0].z
         if len(args) == 3:
             if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
                 self.x *= args[0]
@@ -472,15 +472,15 @@ class Vector3D(Documentation):
             if type(args[0]) in [int, float]:
                 self.x /= args[0]
                 self.y /= args[0]
-                self.y /= args[0]
+                self.z /= args[0]
             if type(args[0]) in [tuple, list]:
                 self.x /= args[0]
                 self.y /= args[1]
-                self.y /= args[2]
+                self.z /= args[2]
             if type(args[0]) == Vector3D:
                 self.x /= args[0].x
                 self.y /= args[0].y
-                self.y /= args[0].y
+                self.z /= args[0].z
         if len(args) == 3:
             if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
                 self.x /= args[0]
