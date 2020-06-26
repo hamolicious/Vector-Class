@@ -9,16 +9,12 @@ class Documentation():
         Returns a Vector that will have a random postition within the specified range
 
         2D
-            Vector2D(10) --> x,y between 0, 10
-            Vector2D([-10, 10]) --> x,y between -10, 10
-            Vector2D(5, 10) --> x between 0, 5 and y between 0, 10
-            Vector2D([-5, 5], [-10, 10]) --> x between -5, 5 and y between -10, 10
+            Vector2D(10, 10) --> x,y between 0, 10
+            Vector2D(10, 10, 5, 5) --> x,y between 5, 10
 
         3D
-            Vector2D(10) --> x,y,z between 0, 10
-            Vector2D([-10, 10]) --> x,y,z between -10, 10
-            Vector2D(5, 10, 20) --> x between 0, 5 and y between 0, 10 and z between 0, 20
-            Vector2D([-5, 5], [-10, 10], [-20, 20]) --> x between -5, 5 and y between -10, 10 and z between -20, 20
+            Vector2D(10, 10, 10) --> x,y,z between 0, 10
+            Vector2D(10, 10, 10, 5, 5, 5) --> x,y,z between 5, 10
         """
 
     def random_unit():
@@ -94,33 +90,15 @@ class Vector2D(Documentation):
 
     #region automatic creation methods
 
-    def random_pos(self, *args):
-        if len(args[0]) == 1:
-            if type(args[0]) in [int, float]:
-                max_pos = args[0]
-                return Vector2D(randint(0, max_pos), randint(0, max_pos))
-            if type(args[0]) in [tuple, list]:
-                min_pos = args[0]
-                max_pos = args[1]
-                return Vector2D(randint(min_pos, max_pos), randint(min_pos, max_pos))
-        if len(args[0]) == 2:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
-                max_pos_x = args[0]
-                max_pos_y = args[1]
-                return Vector2D(randint(0, max_pos), randint(0, max_pos_y))
-            if type(args[0]) in [tuple, list] and type(args[1]) in [tuple, list]:
-                min_pos_x = args[0][0]
-                max_pos_x = args[0][1]
-                min_pos_y = args[1][0]
-                max_pos_y = args[1][1]
-                return Vector2D(randint(min_pos_x, max_pos_x), randint(min_pos_y, max_pos_y))
+    def random_pos(max_x, max_y, min_x=0, min_y=0):
+        return Vector2D(randint(min_x, max_x), randint(min_y, max_y))
 
-    def random_unit(self):
-        vec = Vector2D.random_pos([-100000, 100000])
+    def random_unit():
+        vec = Vector2D.random_pos(100000, 100000)
         vec.normalise()
         return vec
 
-    def from_angle(self, angle, mode='deg'):
+    def from_angle(angle, mode='deg'):
         if mode == 'deg':
             x = cos(radians(angle))
             y = sin(radians(angle))
@@ -326,32 +304,11 @@ class Vector3D(Documentation):
 
     #region automatic creation methods
 
-    def random_pos(self, *args):
-        if len(args[0]) == 1:
-            if type(args[0]) in [int, float]:
-                max_pos = args[0]
-                return Vector2D(randint(0, max_pos), randint(0, max_pos), randint(0, max_pos))
-            if type(args[0]) in [tuple, list]:
-                min_pos = args[0]
-                max_pos = args[1]
-                return Vector2D(randint(min_pos, max_pos), randint(min_pos, max_pos), randint(min_pos, max_pos))
-        if len(args[0]) == 3:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
-                max_pos_x = args[0]
-                max_pos_y = args[1]
-                max_pos_z = args[2]
-                return Vector2D(randint(0, max_pos), randint(0, max_pos_y), randint(0, max_pos_z))
-            if type(args[0]) in [tuple, list] and type(args[1]) in [tuple, list] and type(args[2]) in [tuple, list]:
-                min_pos_x = args[0][0]
-                max_pos_x = args[0][1]
-                min_pos_y = args[1][0]
-                max_pos_y = args[1][1]
-                min_pos_z = args[2][0]
-                max_pos_z = args[2][1]
-                return Vector2D(randint(min_pos_x, max_pos_x), randint(min_pos_y, max_pos_y), randint(min_pos_z, max_pos_z))
+    def random_pos(max_x, max_y, max_z, min_x=0, min_y=0, min_z=0):
+        return Vector3D(randint(min_x, max_x), randint(min_y, max_y), randint(min_z, max_z))
 
-    def random_unit(self):
-        vec = Vector2D.random_pos([-100000, 100000])
+    def random_unit():
+        vec = Vector2D.random_pos(100000, 100000)
         vec.normalise()
         return vec
 
