@@ -70,6 +70,16 @@ class Documentation():
         Normalizes this vector to make its magnitude 1
         """
 
+    def linear_interpolate():
+        """
+        Lineraly interpolates this vector to the passed in vector by T
+        """
+
+    def dot_product():
+        """
+        returns the dot product of this and the passed in vector
+        """
+
 class Vector2D(Documentation):
     def __init__(self, *args):
         if len(args) == 0:
@@ -225,6 +235,15 @@ class Vector2D(Documentation):
             if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
                 self.x /= args[0]
                 self.y /= args[1]
+
+    def linear_interpolate(self, vector, t):
+        x = self.x + t * (vector.x - self.x);
+        y = self.y + t * (vector.y - self.y);
+
+        self.set(x, y)
+
+    def dot_product(self, vector):
+        return sum([self.x * vector.x, self.y * vector.y])
 
     #endregion
 
@@ -443,6 +462,23 @@ class Vector3D(Documentation):
                 self.x /= args[0]
                 self.y /= args[1]
                 self.z /= args[2]
+
+    def linear_interpolate(self, vector, t):
+        x = self.x + t * (vector.x - self.x);
+        y = self.y + t * (vector.y - self.y);
+        z = self.z + t * (vector.z - self.z);
+
+        self.set(x, y, z)
+
+    def cross_product(self, vector):
+        x = (self.y * vector.z) - (self.z * vector.y)
+        y = (self.z * vector.x) - (self.x * vector.z)
+        z = (self.x * vector.y) - (self.y * vector.x)
+
+        return Vector3D(x, y, z)
+
+    def dot_product(self, vector):
+        return sum([self.x * vector.x, self.y * vector.y, self.z * vector.z])
 
     #endregion
 
