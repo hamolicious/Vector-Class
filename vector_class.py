@@ -1,391 +1,354 @@
 from math import atan2, sqrt, degrees, radians, cos, sin
 from random import randint
 
-class Documentation():
-    """Used to add documentation to Vector2D and Vector3D classes"""
+class Vector2D:
+    #region INIT
+    def _get_xy(self, args):
+        """Generates a x and y from any input
+
+        Returns:
+            [tuple]: x, y
+        """
+        number_of_args = len(args)
+
+        if   number_of_args == 0 : return 0, 0 # no arguments
+        elif number_of_args == 2 : x, y = args ; return x, y # both x and y passed in
+
+        if number_of_args == 1: # one argument
+            arg_type = type(args[0])
+            
+            if arg_type is float or arg_type is int: # single int or float argument
+                return args[0], args[0]
+            if arg_type is list or arg_type is tuple:
+                return args[0][0], args[0][1] # single list argument
+            if arg_type is Vector2D:
+                return args[0].x, args[0].y
+
+    def __init__(self, *args):
+        self.x, self.y = self._get_xy(args)
+        self.data = {}
+    #endregion
+
+    #region AUTO CREATE METHODS
 
     def random_pos():
-        """
-        Returns a Vector that will have a random postition within the specified range
+        """Returns a vector in normalised 0-1 space
 
-        2D
-            Vector2D(10, 10) --> x,y between 0, 10
-            Vector2D(10, 10, 5, 5) --> x,y between 5, 10
-
-        3D
-            Vector2D(10, 10, 10) --> x,y,z between 0, 10
-            Vector2D(10, 10, 10, 5, 5, 5) --> x,y,z between 5, 10
+        Returns:
+            Vector2D: a vector in normal space
         """
+        return Vector2D(randint(0, 1000)/1000, randint(0, 1000)/1000)
 
     def random_unit():
-        """
-        Returns a random unit Vector
-        """
+        """Generates a unit vector with a random heading
 
-    def from_angle():
+        Returns:
+            Vector2D: unit vector
         """
-        Generate a unit vector from an angle that will have a heading towards that angle
-        """
+        pos = Vector2D(randint(-1000, 1000), randint(-1000, 1000))
+        pos.normalise()
+        return pos
 
-    def dist():
-        """
-        Returns the distance between this vector and another (or tuple/list)
+    def from_angle(angle):
+        """Creates a unit vector with the same heading as the angle
 
-        vec.dist(other_vec) --> distance between vec and other_vec
-        vec.dist([0, 5]) --> distance between vec and the x0y5 position
-        """
+        Args:
+            angle (float): angle of direction in radians
 
-    def set():
+        Returns:
+            Vector2D: unit vector
         """
-        sets the Vectors x,y,(z) parameters
-        """
-
-    def get():
-        """
-        Returns a list containing the vectors position
-        """
-
-    def get_heading_angle():
-        """
-        returns angle offset from the x axis
-        """
-
-    def copy():
-        """
-        Returns an identical copy of this vector
-        """
-
-    def get_magnitude():
-        """
-        returns the magnitude of this vector
-        """
-
-    def normalise():
-        """
-        Normalises this vector to make its magnitude 1
-        """
-
-    def normalize():
-        """
-        Normalizes this vector to make its magnitude 1
-        """
-
-    def linear_interpolate():
-        """
-        Lineraly interpolates this vector to the passed in vector by T
-        """
-
-    def dot_product():
-        """
-        returns the dot product of this and the passed in vector
-        """
-
-class Vector2D(Documentation):
-    def __init__(self, *args):
-        if len(args) == 0:
-            self.x = 0
-            self.y = 0
-        elif len(args) == 1:
-            if type(args) in [list, tuple]:
-                self.x = args[0][0]
-                self.y = args[0][1]
-            else:
-                self.x = args[0]
-                self.y = args[0]
-        elif len(args) == 2:
-            self.x = args[0]
-            self.y = args[1]
-
-        self.data = {}
-
-    #region automatic creation methods
-
-    def random_pos(max_x, max_y, min_x=0, min_y=0):
-        return Vector2D(randint(min_x, max_x), randint(min_y, max_y))
-
-    def random_unit():
-        vec = Vector2D.random_pos(100000, 100000)
-        vec.normalise()
-        return vec
-
-    def from_angle(angle, mode='deg'):
-        if mode == 'deg':
-            x = cos(radians(angle))
-            y = sin(radians(angle))
-        if mode == 'rad':
-            x = cos(angle)
-            y = sin(angle)
-
-        return Vector2D(x, y)
+        return Vector2D(cos(angle), sin(angle))
 
     #endregion
 
-    #region custom other methods
+    #region CUSTOM METHODS
 
-    def dist(self, other, use_sqrt=True):
-        d = 0
-        if type(other) == Vector2D:
-            d = (other.x - self.x)**2 + (other.y - self.y)**2
-        if type(other) in [tuple, list]:
-            d = (other[0] - self.x)**2 + (other[1] - self.y)**2
+    def get(self):
+        """Gets the x and y components as an integer tuple
 
-        if use_sqrt : return sqrt(d)
-        else : return d
+        Returns:
+            tuple: contains x and y as integers
+        """
+        return (int(self.x), int(self.y))
 
-    def set(self, *args):
-        if len(args) == 0:
-            self.x = 0
-            self.y = 0
-        elif len(args) == 1:
-            if type(args) in [list, tuple]:
-                self.x = args[0][0]
-                self.y = args[0][1]
-            else:
-                self.x = args[0]
-                self.y = args[0]
-        elif len(args) == 2:
-            self.x = args[0]
-            self.y = args[1]
-
-    def get(self, mode=int):
-        return [mode(self.x), mode(self.y)]
-
-    def get_heading_angle(self, mode='deg'):
-        a = atan2(self.x, self.y)
-
-        if mode == 'deg' : return degrees(a)
-        if mode == 'rad' : return a
+    def set(self,  *args):
+        """Sets the x and y components
+        """
+        x, y = self._get_xy(args)
+        self.x = x ; self.y = y
 
     def copy(self):
+        """Gets a copy of this vector
+
+        Returns:
+            Vector2D: a copy of this vector
+        """
         return Vector2D(self.x, self.y)
 
+    def clear(self):
+        """Sets both components to 0
+        """
+        self.x = self.y = 0
+
+    #endregion
+
+    #region CUSTOM MATHEMATICAL METHODS
+    def dist_sqrt(self, *args):
+        """Gets the distance between this point and another (uses square root)
+
+        Returns:
+            float: distance
+        """
+        x, y = self._get_xy(args)
+        return sqrt((self.x - x)**2 + (self.y - y)**2)
+
+    def dist(self, *args):
+        """Gets the distance between this point and another (does not use square root)
+
+        Returns:
+            float: distance
+        """
+        x, y = self._get_xy(args)
+        return (self.x - x)**2 + (self.y - y)**2
+
+    def get_heading_angle(self):
+        """Returns the heading angle in radians assuming 0 is aligned with x
+
+        Returns:
+            float: angle in radians
+        """
+        return atan2(self.x, self.y)
+
     def get_magnitude(self):
+        """Gets the magnitude/length of the vector
+
+        Returns:
+            float: magnitude
+        """
         return sqrt(self.x**2 + self.y**2)
 
     def normalise(self):
+        """Normalises this vector making it a unit vector
+        """
         mag = self.get_magnitude()
         self.div(mag)
     def normalize(self):
+        """Normalises this vector making it a unit vector
+        """
         self.normalise()
 
     def truncate(self, max_val):
+        """Clamps the x and y components to be in range -max_val to max_val
+
+        Args:
+            max_val (float): max and min for each component
+        """
         if self.x > max_val : self.x = max_val
         if self.y > max_val : self.y = max_val
 
         if self.x < -max_val : self.x = -max_val
         if self.y < -max_val : self.y = -max_val
-    #endregion
-
-    #region custom mathematical methods
 
     def add(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                self.x += args[0]
-                self.y += args[0]
-            if type(args[0]) in [tuple, list]:
-                self.x += args[0]
-                self.y += args[1]
-            if type(args[0]) == Vector2D:
-                self.x += args[0].x
-                self.y += args[0].y
-        if len(args) == 2:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
-                self.x += args[0]
-                self.y += args[1]
+        x, y = self._get_xy(args)
+        self.x += x ; self.y += y
 
     def sub(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                self.x -= args[0]
-                self.y -= args[0]
-            if type(args[0]) in [tuple, list]:
-                self.x -= args[0]
-                self.y -= args[1]
-            if type(args[0]) == Vector2D:
-                self.x -= args[0].x
-                self.y -= args[0].y
-        if len(args) == 2:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
-                self.x -= args[0]
-                self.y -= args[1]
+        x, y = self._get_xy(args)
+        self.x /= x ; self.y /= y
 
     def mult(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                self.x *= args[0]
-                self.y *= args[0]
-            if type(args[0]) in [tuple, list]:
-                self.x *= args[0]
-                self.y *= args[1]
-            if type(args[0]) == Vector2D:
-                self.x *= args[0].x
-                self.y *= args[0].y
-        if len(args) == 2:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
-                self.x *= args[0]
-                self.y *= args[1]
+        x, y = self._get_xy(args)
+        self.x *= x ; self.y *= y
 
     def div(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                self.x /= args[0]
-                self.y /= args[0]
-            if type(args[0]) in [tuple, list]:
-                self.x /= args[0]
-                self.y /= args[1]
-            if type(args[0]) == Vector2D:
-                self.x /= args[0].x
-                self.y /= args[0].y
-        if len(args) == 2:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
-                self.x /= args[0]
-                self.y /= args[1]
+        x, y = self._get_xy(args)
+        self.x /= x ; self.y /= y
 
-    def linear_interpolate(self, vector, t):
-        x = self.x + t * (vector.x - self.x);
-        y = self.y + t * (vector.y - self.y);
+    def linear_interpolate(self, *args, t=0.5):
+        """Linearly interpolates between current position and passed in position
+
+        Args:
+            t (float, optional): speed. Defaults to 0.5.
+        """
+        x, y = self._get_xy(args)
+
+        x = self.x + t * (x - self.x);
+        y = self.y + t * (y - self.y);
 
         self.set(x, y)
 
-    def dot_product(self, vector):
-        return sum([self.x * vector.x, self.y * vector.y])
+    def dot_product(self, *args):
+        """Dot product of this and another vector
 
+        Returns:
+            float: dot product result
+        """
+        x, y = self._get_xy(args)
+        return sum([self.x * x, self.y * y])
     #endregion
 
-    #region magic methods
+    #region MAGIC METHODS
+    def __iadd__(self, *args):
+        x, y = self._get_xy(args)
+        self.x += x ; self.y += y
+        return self
+    def __isub__(self, *args):
+        x, y = self._get_xy(args)
+        self.x /= x ; self.y /= y
+        return self
+    def __imul__(self, *args):
+        x, y = self._get_xy(args)
+        self.x *= x ; self.y *= y
+        return self
+    def __idiv__(self, *args):
+        x, y = self._get_xy(args)
+        self.x /= x ; self.y /= y
+        return self
 
     def __add__(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                return Vector2D(self.x + args[0], self.y + args[0])
-            if type(args[0]) in [tuple, list]:
-                return Vector2D(self.x + args[0], self.y + args[1])
-            if type(args[0]) == Vector2D:
-                return Vector2D(self.x + args[0].x, self.y + args[0].y)
-        if len(args) == 2:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
-                return Vector2D(self.x + args[0], self.y + args[1])
+        x, y = self._get_xy(args)
 
+        return Vector2D(self.x + x, self.y + y)
     def __sub__(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                return Vector2D(self.x - args[0], self.y - args[0])
-            if type(args[0]) in [tuple, list]:
-                return Vector2D(self.x - args[0], self.y - args[1])
-            if type(args[0]) == Vector2D:
-                return Vector2D(self.x - args[0].x, self.y - args[0].y)
-        if len(args) == 2:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
-                return Vector2D(self.x - args[0], self.y - args[1])
-
-    def __mult__(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                return Vector2D(self.x / args[0], self.y / args[0])
-            if type(args[0]) in [tuple, list]:
-                return Vector2D(self.x / args[0], self.y / args[1])
-            if type(args[0]) == Vector2D:
-                return Vector2D(self.x / args[0].x, self.y / args[0].y)
-        if len(args) == 2:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
-                return Vector2D(self.x / args[0], self.y / args[1])
-
+        x, y = self._get_xy(args)
+        
+        return Vector2D(self.x - x, self.y - y)
+    def __mul__(self, *args):
+        x, y = self._get_xy(args)
+        
+        return Vector2D(self.x * x, self.y * y)
     def __div__(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                return Vector2D(self.x / args[0], self.y / args[0])
-            if type(args[0]) in [tuple, list]:
-                return Vector2D(self.x / args[0], self.y / args[1])
-            if type(args[0]) == Vector2D:
-                return Vector2D(self.x / args[0].x, self.y / args[0].y)
-        if len(args) == 2:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float]:
-                return Vector2D(self.x / args[0], self.y / args[1])
-
+        x, y = self._get_xy(args)
+        
+        return Vector2D(self.x / x, self.y / y)
     #endregion
 
-class Vector3D(Documentation):
+class Vector3D:
+    #region INIT
+    def _get_xyz(self, args):
+        """Generates a x, y and z from any input
+
+        Returns:
+            [tuple]: x, y, z
+        """
+        number_of_args = len(args)
+
+        if   number_of_args == 0 : return 0, 0, 0 # no arguments
+        elif number_of_args == 3 : x, y, z = args ; return x, y, z # both x and y passed in
+
+        if number_of_args == 1: # one argument
+            arg_type = type(args[0])
+            
+            if arg_type is float or arg_type is int: # single int or float argument
+                return args[0], args[0], args[0]
+            if arg_type is list or arg_type is tuple:
+                return args[0][0], args[0][1], args[0][2] # single list argument
+            if arg_type is Vector2D:
+                return args[0].x, args[0].y, args[0].z
+
     def __init__(self, *args):
-        if len(args) == 0:
-            self.x = 0
-            self.y = 0
-            self.z = 0
-        elif len(args) == 1:
-            if type(args) in [list, tuple]:
-                self.x = args[0][0]
-                self.y = args[0][1]
-                self.z = args[0][2]
-            else:
-                self.x = args[0]
-                self.y = args[0]
-                self.z = args[0]
-        elif len(args) == 3:
-            self.x = args[0]
-            self.y = args[1]
-            self.z = args[2]
-
+        self.x, self.y, self.z = self._get_xyz(args)
         self.data = {}
+    #endregion
 
-    #region automatic creation methods
+    #region AUTO CREATE METHODS
 
-    def random_pos(max_x, max_y, max_z, min_x=0, min_y=0, min_z=0):
-        return Vector3D(randint(min_x, max_x), randint(min_y, max_y), randint(min_z, max_z))
+    def random_pos():
+        """Returns a vector in normalised 0-1 space
+
+        Returns:
+            Vector2D: a vector in normal space
+        """
+        return Vector3D(randint(0, 1000)/1000, randint(0, 1000)/1000, randint(0, 1000)/1000)
 
     def random_unit():
-        vec = Vector2D.random_pos(100000, 100000)
-        vec.normalise()
-        return vec
+        """Generates a unit vector with a random heading
+
+        Returns:
+            Vector2D: unit vector
+        """
+        pos = Vector2D(randint(-1000, 1000), randint(-1000, 1000), randint(-1000, 1000))
+        pos.normalise()
+        return pos
 
     #endregion
 
-    #region custom other methods
+    #region CUSTOM METHODS
 
-    def dist(self, other, use_sqrt=True):
-        d = 0
-        if type(other) == Vector3D:
-            d = (other.x - self.x)**2 + (other.y - self.y)**2 + (other.z - self.z)**2
-        if type(other) in [tuple, list]:
-            d = (other[0] - self.x)**2 + (other[1] - self.y)**2 + (other[2] - self.z)**2
+    def get(self):
+        """Gets the x and y components as an integer tuple
 
-        if use_sqrt : return sqrt(d)
-        else : return d
+        Returns:
+            tuple: contains x and y as integers
+        """
+        return (int(self.x), int(self.y), int(self.z))
 
-    def set(self, *args):
-        if len(args) == 0:
-            self.x = 0
-            self.y = 0
-            self.z = 0
-        elif len(args) == 1:
-            if type(args) in [list, tuple]:
-                self.x = args[0][0]
-                self.y = args[0][1]
-                self.z = args[0][2]
-            else:
-                self.x = args[0]
-                self.y = args[0]
-                self.z = args[0]
-        elif len(args) == 3:
-            self.x = args[0]
-            self.y = args[1]
-            self.z = args[2]
-
-    def get(self, mode=int):
-        return [mode(self.x), mode(self.y), mode(self.z)]
+    def set(self,  *args):
+        """Sets the x and y components
+        """
+        x, y, z = self._get_xyz(args)
+        self.x = x ; self.y = y ; self.z = z
 
     def copy(self):
-        return Vector3D(self.x, self.y, self.z)
+        """Gets a copy of this vector
+
+        Returns:
+            Vector2D: a copy of this vector
+        """
+        return Vector2D(self.x, self.y, self.z)
+
+    def clear(self):
+        """Sets both components to 0
+        """
+        self.x = self.y = self.z = 0
+
+    #endregion
+
+    #region CUSTOM MATHEMATICAL METHODS
+    def dist_sqrt(self, *args):
+        """Gets the distance between this point and another (uses square root)
+
+        Returns:
+            float: distance
+        """
+        x, y, z = self._get_xyz(args)
+        return sqrt((self.x - x)**2 + (self.y - y)**2 + (self.z - z)**2)
+
+    def dist(self, *args):
+        """Gets the distance between this point and another (does not use square root)
+
+        Returns:
+            float: distance
+        """
+        x, y, z = self._get_xyz(args)
+        return (self.x - x)**2 + (self.y - y)**2 + (self.z - z)**2
 
     def get_magnitude(self):
+        """Gets the magnitude/length of the vector
+
+        Returns:
+            float: magnitude
+        """
         return sqrt(self.x**2 + self.y**2 + self.z**2)
 
     def normalise(self):
+        """Normalises this vector making it a unit vector
+        """
         mag = self.get_magnitude()
         self.div(mag)
     def normalize(self):
+        """Normalises this vector making it a unit vector
+        """
         self.normalise()
 
     def truncate(self, max_val):
+        """Clamps the x and y components to be in range -max_val to max_val
+
+        Args:
+            max_val (float): max and min for each component
+        """
         if self.x > max_val : self.x = max_val
         if self.y > max_val : self.y = max_val
         if self.z > max_val : self.z = max_val
@@ -393,158 +356,72 @@ class Vector3D(Documentation):
         if self.x < -max_val : self.x = -max_val
         if self.y < -max_val : self.y = -max_val
         if self.z < -max_val : self.z = -max_val
-    #endregion
-
-    #region custom mathematical methods
 
     def add(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                self.x += args[0]
-                self.y += args[0]
-                self.z += args[0]
-            if type(args[0]) in [tuple, list]:
-                self.x += args[0]
-                self.y += args[1]
-                self.z += args[2]
-            if type(args[0]) == Vector3D:
-                self.x += args[0].x
-                self.y += args[0].y
-                self.z += args[0].z
-        if len(args) == 3:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
-                self.x += args[0]
-                self.y += args[1]
-                self.z += args[2]
+        x, y, z = self._get_xyz(args)
+        self.x += x ; self.y += y ; self.z += z
 
     def sub(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                self.x -= args[0]
-                self.y -= args[0]
-                self.y -= args[0]
-            if type(args[0]) in [tuple, list]:
-                self.x -= args[0]
-                self.y -= args[1]
-                self.z -= args[2]
-            if type(args[0]) == Vector3D:
-                self.x -= args[0].x
-                self.y -= args[0].y
-                self.z -= args[0].z
-        if len(args) == 3:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
-                self.x -= args[0]
-                self.y -= args[1]
-                self.z -= args[2]
+        x, y, z = self._get_xyz(args)
+        self.x /= x ; self.y /= y ; self.z /= z
 
     def mult(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                self.x *= args[0]
-                self.y *= args[0]
-                self.z *= args[0]
-            if type(args[0]) in [tuple, list]:
-                self.x *= args[0]
-                self.y *= args[1]
-                self.z *= args[2]
-            if type(args[0]) == Vector3D:
-                self.x *= args[0].x
-                self.y *= args[0].y
-                self.z *= args[0].z
-        if len(args) == 3:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
-                self.x *= args[0]
-                self.y *= args[1]
-                self.z *= args[2]
+        x, y, z = self._get_xyz(args)
+        self.x *= x ; self.y *= y ; self.z *= z
 
     def div(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                self.x /= args[0]
-                self.y /= args[0]
-                self.z /= args[0]
-            if type(args[0]) in [tuple, list]:
-                self.x /= args[0]
-                self.y /= args[1]
-                self.z /= args[2]
-            if type(args[0]) == Vector3D:
-                self.x /= args[0].x
-                self.y /= args[0].y
-                self.z /= args[0].z
-        if len(args) == 3:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
-                self.x /= args[0]
-                self.y /= args[1]
-                self.z /= args[2]
+        x, y, z = self._get_xyz(args)
+        self.x /= x ; self.y /= y ; self.z /= z
 
-    def linear_interpolate(self, vector, t):
-        x = self.x + t * (vector.x - self.x);
-        y = self.y + t * (vector.y - self.y);
-        z = self.z + t * (vector.z - self.z);
+    def linear_interpolate(self, *args, t=0.5):
+        """Linearly interpolates between current position and passed in position
+
+        Args:
+            t (float, optional): speed. Defaults to 0.5.
+        """
+        x, y, z = self._get_xyz(args)
+
+        x = self.x + t * (x - self.x);
+        y = self.y + t * (y - self.y);
+        z = self.z + t * (y - self.z);
 
         self.set(x, y, z)
 
-    def cross_product(self, vector):
-        x = (self.y * vector.z) - (self.z * vector.y)
-        y = (self.z * vector.x) - (self.x * vector.z)
-        z = (self.x * vector.y) - (self.y * vector.x)
-
-        return Vector3D(x, y, z)
-
-    def dot_product(self, vector):
-        return sum([self.x * vector.x, self.y * vector.y, self.z * vector.z])
-
     #endregion
 
-    #region magic methods
+    #region MAGIC METHODS
+    def __iadd__(self, *args):
+        x, y, z = self._get_xyz(args)
+        self.x += x ; self.y += y ; self.z += z
+        return self
+    def __isub__(self, *args):
+        x, y, z = self._get_xyz(args)
+        self.x /= x ; self.y /= y ; self.z /= z
+        return self
+    def __imul__(self, *args):
+        x, y, z = self._get_xyz(args)
+        self.x *= x ; self.y *= y ; self.z *= z
+        return self
+    def __idiv__(self, *args):
+        x, y, z = self._get_xyz(args)
+        self.x /= x ; self.y /= y ; self.z /= z
+        return self
 
     def __add__(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                return Vector3D(self.x + args[0], self.y + args[0], self.z + args[0])
-            if type(args[0]) in [tuple, list]:
-                return Vector3D(self.x + args[0], self.y + args[1], self.z + args[2])
-            if type(args[0]) == Vector3D:
-                return Vector3D(self.x + args[0].x, self.y + args[0].y, self.z + args[0].z)
-        if len(args) == 3:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
-                return Vector3D(self.x + args[0], self.y + args[1], self.z + args[2])
+        x, y, z = self._get_xyz(args)
 
+        return Vector2D(self.x + x, self.y + y, self.z + z)
     def __sub__(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                return Vector3D(self.x - args[0], self.y - args[0], self.z - args[0])
-            if type(args[0]) in [tuple, list]:
-                return Vector3D(self.x - args[0], self.y - args[1], self.z - args[2])
-            if type(args[0]) == Vector3D:
-                return Vector3D(self.x - args[0].x, self.y - args[0].y, self.z - args[0].z)
-        if len(args) == 3:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
-                return Vector3D(self.x - args[0], self.y - args[1], self.z - args[2])
-
-    def __mult__(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                return Vector3D(self.x * args[0], self.y * args[0], self.z * args[0])
-            if type(args[0]) in [tuple, list]:
-                return Vector3D(self.x * args[0], self.y * args[1], self.z * args[2])
-            if type(args[0]) == Vector3D:
-                return Vector3D(self.x * args[0].x, self.y * args[0].y, self.z * args[0].z)
-        if len(args) == 3:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
-                return Vector3D(self.x * args[0], self.y * args[1], self.z * args[2])
-
+        x, y, z = self._get_xyz(args)
+        
+        return Vector2D(self.x - x, self.y - y, self.z - z)
+    def __mul__(self, *args):
+        x, y, z = self._get_xyz(args)
+        
+        return Vector2D(self.x * x, self.y * y, self.z * z)
     def __div__(self, *args):
-        if len(args) == 1:
-            if type(args[0]) in [int, float]:
-                return Vector3D(self.x / args[0], self.y / args[0], self.z / args[0])
-            if type(args[0]) in [tuple, list]:
-                return Vector3D(self.x / args[0], self.y / args[1], self.z / args[2])
-            if type(args[0]) == Vector3D:
-                return Vector3D(self.x / args[0].x, self.y / args[0].y, self.z / args[0].z)
-        if len(args) == 3:
-            if type(args[0]) in [int, float] and type(args[1]) in [int, float] and type(args[2]) in [int, float]:
-                return Vector3D(self.x / args[0], self.y / args[1], self.z / args[2])
-
+        x, y, z = self._get_xyz(args)
+        
+        return Vector2D(self.x / x, self.y / y, self.z / z)
     #endregion
 
