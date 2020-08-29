@@ -168,6 +168,12 @@ class Vector2D(Documentation):
     def normalize(self):
         self.normalise()
 
+    def truncate(self, max_val):
+        if self.x > max_val : self.x = max_val
+        if self.y > max_val : self.y = max_val
+
+        if self.x < -max_val : self.x = -max_val
+        if self.y < -max_val : self.y = -max_val
     #endregion
 
     #region custom mathematical methods
@@ -379,6 +385,14 @@ class Vector3D(Documentation):
     def normalize(self):
         self.normalise()
 
+    def truncate(self, max_val):
+        if self.x > max_val : self.x = max_val
+        if self.y > max_val : self.y = max_val
+        if self.z > max_val : self.z = max_val
+
+        if self.x < -max_val : self.x = -max_val
+        if self.y < -max_val : self.y = -max_val
+        if self.z < -max_val : self.z = -max_val
     #endregion
 
     #region custom mathematical methods
