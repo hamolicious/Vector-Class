@@ -245,7 +245,7 @@ class Vector3D:
                 return args[0], args[0], args[0]
             if arg_type is list or arg_type is tuple:
                 return args[0][0], args[0][1], args[0][2] # single list argument
-            if arg_type is Vector2D:
+            if arg_type is Vector3D:
                 return args[0].x, args[0].y, args[0].z
 
     def __init__(self, *args):
@@ -410,18 +410,18 @@ class Vector3D:
     def __add__(self, *args):
         x, y, z = self._get_xyz(args)
 
-        return Vector2D(self.x + x, self.y + y, self.z + z)
+        return Vector3D(self.x + x, self.y + y, self.z + z)
     def __sub__(self, *args):
         x, y, z = self._get_xyz(args)
         
-        return Vector2D(self.x - x, self.y - y, self.z - z)
+        return Vector3D(self.x - x, self.y - y, self.z - z)
     def __mul__(self, *args):
         x, y, z = self._get_xyz(args)
         
-        return Vector2D(self.x * x, self.y * y, self.z * z)
+        return Vector3D(self.x * x, self.y * y, self.z * z)
     def __div__(self, *args):
         x, y, z = self._get_xyz(args)
         
-        return Vector2D(self.x / x, self.y / y, self.z / z)
+        return Vector3D(self.x / x, self.y / y, self.z / z)
     #endregion
 
