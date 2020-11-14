@@ -16,7 +16,7 @@ class Vector2D:
 
         if number_of_args == 1: # one argument
             arg_type = type(args[0])
-            
+
             if arg_type is float or arg_type is int: # single int or float argument
                 return args[0], args[0]
             if arg_type is list or arg_type is tuple:
@@ -197,7 +197,7 @@ class Vector2D:
         return self
     def __isub__(self, *args):
         x, y = self._get_xy(args)
-        self.x /= x ; self.y /= y
+        self.x -= x ; self.y -= y
         return self
     def __imul__(self, *args):
         x, y = self._get_xy(args)
@@ -214,15 +214,15 @@ class Vector2D:
         return Vector2D(self.x + x, self.y + y)
     def __sub__(self, *args):
         x, y = self._get_xy(args)
-        
+
         return Vector2D(self.x - x, self.y - y)
     def __mul__(self, *args):
         x, y = self._get_xy(args)
-        
+
         return Vector2D(self.x * x, self.y * y)
     def __div__(self, *args):
         x, y = self._get_xy(args)
-        
+
         return Vector2D(self.x / x, self.y / y)
     #endregion
 
@@ -241,7 +241,7 @@ class Vector3D:
 
         if number_of_args == 1: # one argument
             arg_type = type(args[0])
-            
+
             if arg_type is float or arg_type is int: # single int or float argument
                 return args[0], args[0], args[0]
             if arg_type is list or arg_type is tuple:
@@ -415,15 +415,14 @@ class Vector3D:
         return Vector2D(self.x + x, self.y + y, self.z + z)
     def __sub__(self, *args):
         x, y, z = self._get_xyz(args)
-        
+
         return Vector2D(self.x - x, self.y - y, self.z - z)
     def __mul__(self, *args):
         x, y, z = self._get_xyz(args)
-        
+
         return Vector2D(self.x * x, self.y * y, self.z * z)
     def __div__(self, *args):
         x, y, z = self._get_xyz(args)
-        
+
         return Vector2D(self.x / x, self.y / y, self.z / z)
     #endregion
-
