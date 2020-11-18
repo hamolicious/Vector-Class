@@ -270,7 +270,7 @@ class Vector3D:
         Returns:
             Vector2D: unit vector
         """
-        pos = Vector2D(randint(-1000, 1000), randint(-1000, 1000), randint(-1000, 1000))
+        pos = Vector3D(randint(-1000, 1000), randint(-1000, 1000), randint(-1000, 1000))
         pos.normalise()
         return pos
 
@@ -298,7 +298,7 @@ class Vector3D:
         Returns:
             Vector2D: a copy of this vector
         """
-        return Vector2D(self.x, self.y, self.z)
+        return Vector3D(self.x, self.y, self.z)
 
     def clear(self):
         """Sets both components to 0
