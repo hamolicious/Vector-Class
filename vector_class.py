@@ -5,7 +5,6 @@ class Vector2D:
     #region INIT
     def _get_xy(self, args):
         """Generates a x and y from any input
-
         Returns:
             [tuple]: x, y
         """
@@ -33,7 +32,6 @@ class Vector2D:
 
     def random_pos():
         """Returns a vector in normalised 0-1 space
-
         Returns:
             Vector2D: a vector in normal space
         """
@@ -41,7 +39,6 @@ class Vector2D:
 
     def random_unit():
         """Generates a unit vector with a random heading
-
         Returns:
             Vector2D: unit vector
         """
@@ -51,10 +48,8 @@ class Vector2D:
 
     def from_angle(angle):
         """Creates a unit vector with the same heading as the angle
-
         Args:
             angle (float): angle of direction in radians
-
         Returns:
             Vector2D: unit vector
         """
@@ -66,7 +61,6 @@ class Vector2D:
 
     def get(self):
         """Gets the x and y components as an integer tuple
-
         Returns:
             tuple: contains x and y as integers
         """
@@ -80,7 +74,6 @@ class Vector2D:
 
     def copy(self):
         """Gets a copy of this vector
-
         Returns:
             Vector2D: a copy of this vector
         """
@@ -96,7 +89,6 @@ class Vector2D:
     #region CUSTOM MATHEMATICAL METHODS
     def dist_sqrt(self, *args):
         """Gets the distance between this point and another (uses square root)
-
         Returns:
             float: distance
         """
@@ -105,7 +97,6 @@ class Vector2D:
 
     def dist(self, *args):
         """Gets the distance between this point and another (does not use square root)
-
         Returns:
             float: distance
         """
@@ -114,7 +105,6 @@ class Vector2D:
 
     def get_heading_angle(self):
         """Returns the heading angle in radians assuming 0 is aligned with x
-
         Returns:
             float: angle in radians
         """
@@ -122,7 +112,6 @@ class Vector2D:
 
     def get_magnitude(self):
         """Gets the magnitude/length of the vector
-
         Returns:
             float: magnitude
         """
@@ -141,7 +130,6 @@ class Vector2D:
 
     def truncate(self, max_val):
         """Clamps the x and y components to be in range -max_val to max_val
-
         Args:
             max_val (float): max and min for each component
         """
@@ -169,7 +157,6 @@ class Vector2D:
 
     def linear_interpolate(self, *args, t=0.5):
         """Linearly interpolates between current position and passed in position
-
         Args:
             t (float, optional): speed. Defaults to 0.5.
         """
@@ -182,7 +169,6 @@ class Vector2D:
 
     def dot_product(self, *args):
         """Dot product of this and another vector
-
         Returns:
             float: dot product result
         """
@@ -230,7 +216,6 @@ class Vector3D:
     #region INIT
     def _get_xyz(self, args):
         """Generates a x, y and z from any input
-
         Returns:
             [tuple]: x, y, z
         """
@@ -258,7 +243,6 @@ class Vector3D:
 
     def random_pos():
         """Returns a vector in normalised 0-1 space
-
         Returns:
             Vector2D: a vector in normal space
         """
@@ -266,7 +250,6 @@ class Vector3D:
 
     def random_unit():
         """Generates a unit vector with a random heading
-
         Returns:
             Vector2D: unit vector
         """
@@ -279,22 +262,20 @@ class Vector3D:
     #region CUSTOM METHODS
 
     def get(self):
-        """Gets the x and y components as an integer tuple
-
+        """Gets the x, y and z components as an integer tuple
         Returns:
-            tuple: contains x and y as integers
+            tuple: contains x, y and z as integers
         """
         return (int(self.x), int(self.y), int(self.z))
 
     def set(self,  *args):
-        """Sets the x and y components
+        """Sets the x, y and z components
         """
         x, y, z = self._get_xyz(args)
         self.x = x ; self.y = y ; self.z = z
 
     def copy(self):
         """Gets a copy of this vector
-
         Returns:
             Vector2D: a copy of this vector
         """
@@ -310,7 +291,6 @@ class Vector3D:
     #region CUSTOM MATHEMATICAL METHODS
     def dist_sqrt(self, *args):
         """Gets the distance between this point and another (uses square root)
-
         Returns:
             float: distance
         """
@@ -319,7 +299,6 @@ class Vector3D:
 
     def dist(self, *args):
         """Gets the distance between this point and another (does not use square root)
-
         Returns:
             float: distance
         """
@@ -328,7 +307,6 @@ class Vector3D:
 
     def get_magnitude(self):
         """Gets the magnitude/length of the vector
-
         Returns:
             float: magnitude
         """
@@ -346,8 +324,7 @@ class Vector3D:
         self.normalise()
 
     def truncate(self, max_val):
-        """Clamps the x and y components to be in range -max_val to max_val
-
+        """Clamps the x, y and z components to be in range -max_val to max_val
         Args:
             max_val (float): max and min for each component
         """
@@ -377,15 +354,14 @@ class Vector3D:
 
     def linear_interpolate(self, *args, t=0.5):
         """Linearly interpolates between current position and passed in position
-
         Args:
             t (float, optional): speed. Defaults to 0.5.
         """
         x, y, z = self._get_xyz(args)
 
-        x = self.x + t * (x - self.x);
-        y = self.y + t * (y - self.y);
-        z = self.z + t * (y - self.z);
+        x = self.x + t * (x - self.x)
+        y = self.y + t * (y - self.y)
+        z = self.z + t * (y - self.z)
 
         self.set(x, y, z)
 
