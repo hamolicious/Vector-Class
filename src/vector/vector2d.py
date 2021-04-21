@@ -107,7 +107,7 @@ class Vec2d:
 		return [int(self.x), int(self.y)]
 
 	def set(self, *args):
-		x, y = self.__get_xy()
+		x, y = self.__get_xy(args)
 		self.__elements = x, y
 
 	def copy(self):
