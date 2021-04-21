@@ -12,20 +12,20 @@ class Vec3d:
 		number_of_args = len(args)
 
 		if number_of_args == 0:
-			return 0, 0, 0  # no arguments
+			return [0, 0, 0]  # no arguments
 		elif number_of_args == 3:
-	   		return args  # x, y and z passed in
+	   		return list(args)  # x, y and z passed in
 		elif number_of_args == 1:  # one argument
 			arg_type = type(args[0])
 
 			if arg_type is float or arg_type is int:  # single int or float argument
-				return args[0], args[0], args[0]
+				return [args[0], args[0], args[0]]
 			if arg_type is list or arg_type is tuple:
 				if len(args[0]) == 1:
-					return args[0][0], args[0][0], args[0][0]
-				return args[0][0], args[0][1], args[0][2]  # single list argument
+					return [args[0][0], args[0][0], args[0][0]]
+				return [args[0][0], args[0][1], args[0][2]]  # single list argument
 			if arg_type is Vec3d:
-				return args[0].x, args[0].y, args[0].z
+				return [args[0].x, args[0].y, args[0].z]
 
 		raise TypeError(f'Invalid Input: {args}')
 
@@ -83,6 +83,31 @@ class Vec3d:
 	def d(self, val):
 		self.__elements[2] = val
 
+	#---------------------- R
+	@property
+	def r(self):
+		return self.__elements[0]
+	@r.setter
+	def r(self, val):
+		self.__elements[0] = val
+
+	#---------------------- G
+	@property
+	def g(self):
+		return self.__elements[1]
+	@g.setter
+	def g(self, val):
+		self.__elements[1] = val
+
+	#---------------------- B
+	@property
+	def b(self):
+		return self.__elements[2]
+	@b.setter
+	def b(self, val):
+		self.__elements[2] = val
+
+
 	#---------------------- Magnitude
 	@property
 	def length(self):
@@ -118,7 +143,7 @@ class Vec3d:
 		return [int(self.x), int(self.y), int(self.z)]
 
 	def set(self, *args):
-		x, y, z = self.__get_xyz()
+		x, y, z = self.__get_xyz(args)
 		self.__elements = x, y, z
 
 	def copy(self):
