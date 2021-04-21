@@ -83,6 +83,31 @@ class Vec3d:
 	def d(self, val):
 		self.__elements[2] = val
 
+	#---------------------- R
+	@property
+	def r(self):
+		return self.__elements[0]
+	@r.setter
+	def r(self, val):
+		self.__elements[0] = val
+
+	#---------------------- G
+	@property
+	def g(self):
+		return self.__elements[1]
+	@g.setter
+	def g(self, val):
+		self.__elements[1] = val
+
+	#---------------------- B
+	@property
+	def b(self):
+		return self.__elements[2]
+	@b.setter
+	def b(self, val):
+		self.__elements[2] = val
+
+
 	#---------------------- Magnitude
 	@property
 	def length(self):
