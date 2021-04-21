@@ -144,7 +144,7 @@ class Vec2d:
 
     def sub(self, *args):
         x, y = self._get_xy(args)
-        self.x /= x ; self.y /= y
+        self.x -= x ; self.y -= y
 
     def mult(self, *args):
         x, y = self._get_xy(args)

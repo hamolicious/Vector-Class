@@ -131,7 +131,7 @@ class Vec3d:
 
     def sub(self, *args):
         x, y, z = self._get_xyz(args)
-        self.x /= x ; self.y /= y ; self.z /= z
+        self.x -= x ; self.y -= y ; self.z -= z
 
     def mult(self, *args):
         x, y, z = self._get_xyz(args)
