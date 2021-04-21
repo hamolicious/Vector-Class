@@ -12,21 +12,21 @@ class Vec2d:
 		number_of_args = len(args)
 
 		if number_of_args == 0:
-			return 0, 0  # no arguments
+			return [0, 0]  # no arguments
 		elif number_of_args == 2:
 	   		x, y = args
-	   		return x, y  # both x and y passed in
+	   		return [x, y]  # both x and y passed in
 		elif number_of_args == 1:  # one argument
 			arg_type = type(args[0])
 
 			if arg_type is float or arg_type is int:  # single int or float argument
-				return args[0], args[0]
+				return [args[0], args[0]]
 			if arg_type is list or arg_type is tuple:
 				if len(args[0]) == 1:
-					return args[0][0], args[0][0]
-				return args[0][0], args[0][1]  # single list argument
+					return [args[0][0], args[0][0]]
+				return [args[0][0], args[0][1]]  # single list argument
 			if arg_type is Vec2d:
-				return args[0].x, args[0].y
+				return [args[0].x, args[0].y]
 
 		raise TypeError(f'Invalid Input: {args}')
 
