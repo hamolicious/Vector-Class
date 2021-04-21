@@ -1,193 +1,249 @@
+from math import sin, cos, atan2, sqrt
 from random import randint
-from math import sin, cos, sqrt
+
+def get_unit():
+	return randint(-10000, 10000) / 10000
+def get_normal():
+	return randint(0, 10000) / 10000
 
 class Vec3d:
-    #region INIT
-    def _get_xyz(self, args):
-        """Generates a x, y and z from any input
-        Returns:
-            [tuple]: x, y, z
-        """
-        number_of_args = len(args)
+	def __get_xyz(self, *args) -> list[float]:
+		args = args[0]
+		number_of_args = len(args)
 
-        if   number_of_args == 0 : return 0, 0, 0 # no arguments
-        elif number_of_args == 3 : x, y, z = args ; return x, y, z # both x and y passed in
+		if number_of_args == 0:
+			return 0, 0, 0  # no arguments
+		elif number_of_args == 3:
+	   		return args  # x, y and z passed in
+		elif number_of_args == 1:  # one argument
+			arg_type = type(args[0])
 
-        if number_of_args == 1: # one argument
-            arg_type = type(args[0])
+			if arg_type is float or arg_type is int:  # single int or float argument
+				return args[0], args[0], args[0]
+			if arg_type is list or arg_type is tuple:
+				if len(args[0]) == 1:
+					return args[0][0], args[0][0], args[0][0]
+				return args[0][0], args[0][1], args[0][2]  # single list argument
+			if arg_type is Vec3d:
+				return args[0].x, args[0].y, args[0].z
 
-            if arg_type is float or arg_type is int: # single int or float argument
-                return args[0], args[0], args[0]
-            if arg_type is list or arg_type is tuple:
-                return args[0][0], args[0][1], args[0][2] # single list argument
-            if arg_type is Vec3d:
-                return args[0].x, args[0].y, args[0].z
+		raise TypeError(f'Invalid Input: {args}')
 
-    def __init__(self, *args):
-        self.x, self.y, self.z = self._get_xyz(args)
-        self.data = {}
-    #endregion
+	def __init__(self, *args) -> None:
+		self.__elements = self.__get_xyz(args)
 
-    #region AUTO CREATE METHODS
 
-    def random_pos():
-        """Returns a vector in normalised 0-1 space
-        Returns:
-            Vector2D: a vector in normal space
-        """
-        return Vec3d(randint(0, 1000)/1000, randint(0, 1000)/1000, randint(0, 1000)/1000)
+	#region Properties
 
-    def random_unit():
-        """Generates a unit vector with a random heading
-        Returns:
-            Vector2D: unit vector
-        """
-        pos = Vec3d(randint(-1000, 1000), randint(-1000, 1000), randint(-1000, 1000))
-        pos.normalise()
-        return pos
+	#---------------------- X
+	@property
+	def x(self):
+		return self.__elements[0]
+	@x.setter
+	def x(self, val):
+		self.__elements[0] = val
 
-    #endregion
+	#---------------------- Y
+	@property
+	def y(self):
+		return self.__elements[1]
+	@y.setter
+	def y(self, val):
+		self.__elements[1] = val
 
-    #region CUSTOM METHODS
+	#---------------------- Z
+	@property
+	def z(self):
+		return self.__elements[2]
+	@z.setter
+	def z(self, val):
+		self.__elements[2] = val
 
-    def get(self):
-        """Gets the x, y and z components as an integer tuple
-        Returns:
-            tuple: contains x, y and z as integers
-        """
-        return (int(self.x), int(self.y), int(self.z))
+	#---------------------- W
+	@property
+	def w(self):
+		return self.__elements[0]
+	@w.setter
+	def w(self, val):
+		self.__elements[0] = val
 
-    def set(self,  *args):
-        """Sets the x, y and z components
-        """
-        x, y, z = self._get_xyz(args)
-        self.x = x ; self.y = y ; self.z = z
+	#---------------------- H
+	@property
+	def h(self):
+		return self.__elements[1]
+	@h.setter
+	def h(self, val):
+		self.__elements[1] = val
 
-    def copy(self):
-        """Gets a copy of this vector
-        Returns:
-            Vector2D: a copy of this vector
-        """
-        return Vec3d(self.x, self.y, self.z)
+	#---------------------- D
+	@property
+	def d(self):
+		return self.__elements[2]
+	@d.setter
+	def d(self, val):
+		self.__elements[2] = val
 
-    def clear(self):
-        """Sets both components to 0
-        """
-        self.x = self.y = self.z = 0
+	#---------------------- Magnitude
+	@property
+	def length(self):
+		return self.get_magnitude()
 
-    #endregion
 
-    #region CUSTOM MATHEMATICAL METHODS
-    def dist_sqrt(self, *args):
-        """Gets the distance between this point and another (uses square root)
-        Returns:
-            float: distance
-        """
-        x, y, z = self._get_xyz(args)
-        return sqrt((self.x - x)**2 + (self.y - y)**2 + (self.z - z)**2)
+	#endregion
 
-    def dist(self, *args):
-        """Gets the distance between this point and another (does not use square root)
-        Returns:
-            float: distance
-        """
-        x, y, z = self._get_xyz(args)
-        return (self.x - x)**2 + (self.y - y)**2 + (self.z - z)**2
 
-    def get_magnitude(self):
-        """Gets the magnitude/length of the vector
-        Returns:
-            float: magnitude
-        """
-        return sqrt(self.x**2 + self.y**2 + self.z**2)
+	#region Creation methods
 
-    def normalise(self):
-        """Normalises this vector making it a unit vector
-        """
-        mag = self.get_magnitude()
-        if mag == 0 : return
-        self.div(mag)
-    def normalize(self):
-        """Normalises this vector making it a unit vector
-        """
-        self.normalise()
+	@staticmethod
+	def random_unit():
+		return Vec3d(get_unit(), get_unit(), get_unit())
 
-    def truncate(self, max_val):
-        """Clamps the x, y and z components to be in range -max_val to max_val
-        Args:
-            max_val (float): max and min for each component
-        """
-        if self.x > max_val : self.x = max_val
-        if self.y > max_val : self.y = max_val
-        if self.z > max_val : self.z = max_val
+	@staticmethod
+	def random_pos():
+		return Vec3d(get_normal(), get_normal(), get_normal())
 
-        if self.x < -max_val : self.x = -max_val
-        if self.y < -max_val : self.y = -max_val
-        if self.z < -max_val : self.z = -max_val
+	@staticmethod
+	def zero():
+		return Vec3d()
 
-    def add(self, *args):
-        x, y, z = self._get_xyz(args)
-        self.x += x ; self.y += y ; self.z += z
+	#endregion
 
-    def sub(self, *args):
-        x, y, z = self._get_xyz(args)
-        self.x -= x ; self.y -= y ; self.z -= z
 
-    def mult(self, *args):
-        x, y, z = self._get_xyz(args)
-        self.x *= x ; self.y *= y ; self.z *= z
+	#region General manipulation methods
 
-    def div(self, *args):
-        x, y, z = self._get_xyz(args)
-        self.x /= x ; self.y /= y ; self.z /= z
+	def get(self):
+		return list(self.__elements)
 
-    def linear_interpolate(self, *args, t=0.5):
-        """Linearly interpolates between current position and passed in position
-        Args:
-            t (float, optional): speed. Defaults to 0.5.
-        """
-        x, y, z = self._get_xyz(args)
+	def get_int(self):
+		return [int(self.x), int(self.y), int(self.z)]
 
-        x = self.x + t * (x - self.x)
-        y = self.y + t * (y - self.y)
-        z = self.z + t * (y - self.z)
+	def set(self, *args):
+		x, y, z = self.__get_xyz()
+		self.__elements = x, y, z
 
-        self.set(x, y, z)
+	def copy(self):
+		return Vec3d(self.x, self.y, self.z)
 
-    #endregion
+	def clear(self):
+		self.x = self.y = self.z = 0
 
-    #region MAGIC METHODS
-    def __iadd__(self, *args):
-        x, y, z = self._get_xyz(args)
-        self.x += x ; self.y += y ; self.z += z
-        return self
-    def __isub__(self, *args):
-        x, y, z = self._get_xyz(args)
-        self.x -= x ; self.y -= y ; self.z -= z
-        return self
-    def __imul__(self, *args):
-        x, y, z = self._get_xyz(args)
-        self.x *= x ; self.y *= y ; self.z *= z
-        return self
-    def __idiv__(self, *args):
-        x, y, z = self._get_xyz(args)
-        self.x /= x ; self.y /= y ; self.z /= z
-        return self
+	#endregion
 
-    def __add__(self, *args):
-        x, y, z = self._get_xyz(args)
 
-        return Vec3d(self.x + x, self.y + y, self.z + z)
-    def __sub__(self, *args):
-        x, y, z = self._get_xyz(args)
+	#region Mathematical manipulation methods
 
-        return Vec3d(self.x - x, self.y - y, self.z - z)
-    def __mul__(self, *args):
-        x, y, z = self._get_xyz(args)
+	def dist_sqrt(self, *args):
+		x, y, z = self.__get_xyz(args)
+		return sqrt((self.x - x)**2 + (self.y - y)**2 + (self.z - z)**2)
 
-        return Vec3d(self.x * x, self.y * y, self.z * z)
-    def __div__(self, *args):
-        x, y, z = self._get_xyz(args)
+	def dist(self, *args):
+		x, y, z = self.__get_xyz(args)
+		return (self.x - x)**2 + (self.y - y)**2 + (self.z - z)**2
 
-        return Vec3d(self.x / x, self.y / y, self.z / z)
-    #endregion
+	def get_magnitude(self):
+		return sqrt(self.x**2 + self.y**2 + self.z**2)
+
+	def normalise(self):
+		mag = self.length
+		if mag == 0 : return
+		self.div(mag)
+
+	def clamp(self, *args):
+		max_x, max_y, max_z = self.__get_xyz(args)
+
+		if self.x > max_x : self.x = max_x
+		if self.y > max_y : self.y = max_y
+		if self.z > max_z : self.z = max_z
+
+		if self.x < -max_x : self.x = -max_x
+		if self.y < -max_y : self.y = -max_y
+		if self.z < -max_z : self.z = -max_z
+
+	def add(self, *args):
+		x, y, z = self.__get_xyz(args)
+		self.x += x
+		self.y += y
+		self.z += z
+
+	def sub(self, *args):
+		x, y, z = self.__get_xyz(args)
+		self.x -= x
+		self.y -= y
+		self.z -= z
+
+	def mult(self, *args):
+		x, y, z = self.__get_xyz(args)
+		self.x *= x
+		self.y *= y
+		self.z *= z
+
+	def div(self, *args):
+		x, y, z = self.__get_xyz(args)
+		self.x /= x
+		self.y /= y
+		self.z /= z
+
+	def linear_interpolate(self, *args, t=0.5):
+		x, y, z = self.__get_xyz(args)
+
+		x = self.x + t * (x - self.x)
+		y = self.y + t * (y - self.y)
+		z = self.z + t * (y - self.z)
+
+		self.set(x, y, z)
+
+	def dot_product(self, *args):
+		x, y, z = self.__get_xyz(args)
+		return sum([self.x * x, self.y * y, self.z * z])
+
+	#endregion
+
+
+	#region Dunder methods
+
+	def __iadd__(self, *args):
+		x, y, z = self.__get_xyz(args)
+		self.x += x ; self.y += y ; self.z += z
+		return self
+
+	def __isub__(self, *args):
+		x, y, z = self.__get_xyz(args)
+		self.x -= x ; self.y -= y ; self.z -= z
+		return self
+
+	def __imul__(self, *args):
+		x, y, z = self.__get_xyz(args)
+		self.x *= x ; self.y *= y ; self.z *= z
+		return self
+
+	def __idiv__(self, *args):
+		x, y, z = self.__get_xyz(args)
+		self.x /= x ; self.y /= y ; self.z /= z
+		return self
+
+	def __add__(self, *args):
+		x, y, z = self.__get_xyz(args)
+		return Vec3d(self.x + x, self.y + y, self.z + z)
+
+	def __sub__(self, *args):
+		x, y, z = self.__get_xyz(args)
+		return Vec3d(self.x - x, self.y - y, self.z - z)
+
+	def __mul__(self, *args):
+		x, y, z = self.__get_xyz(args)
+		return Vec3d(self.x * x, self.y * y, self.z * z)
+
+	def __div__(self, *args):
+		x, y, z = self.__get_xyz(args)
+		return Vec3d(self.x / x, self.y / y, self.z / z)
+
+	def __getitem__(self, index):
+		return self.__elements[index]
+
+	def __repr__(self):
+		return f'vector X: {self.x}, Y: {self.y}, Z: {self.z}'
+
+	#endregion
+
+
+
