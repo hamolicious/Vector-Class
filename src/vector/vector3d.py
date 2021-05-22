@@ -1,10 +1,7 @@
 from math import sin, cos, atan2, sqrt
 from random import randint
+from vector.assistive_functions import get_normal, get_unit
 
-def get_unit():
-	return randint(-10000, 10000) / 10000
-def get_normal():
-	return randint(0, 10000) / 10000
 
 class Vec3d:
 	def __get_xyz(self, *args) -> list[float]:
