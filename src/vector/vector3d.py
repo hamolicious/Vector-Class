@@ -141,7 +141,7 @@ class Vec3d:
 
 	def set(self, *args):
 		x, y, z = self.__get_xyz(args)
-		self.__elements = x, y, z
+		self.__elements = [x, y, z]
 
 	def copy(self):
 		return Vec3d(self.x, self.y, self.z)
