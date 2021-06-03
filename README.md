@@ -3,6 +3,8 @@ Had a realisation that I lack a good vector class and been having to rewrite par
 
 To use this class, simply download the vector file and import it into your project, alternatively, copy and paste the code from the vector file and paste it into your own file. This class will work with the most basic version of python, meaning, no need for external libraries :)
 <br>
+[Documentation here](https://github.com/hamolicious/Vector-Class/wiki)
+<br>
 
 ## Things I still want to add:
 * Matrix support
