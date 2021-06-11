@@ -161,13 +161,22 @@ class Color:
 
 	def set(self, *args):
 		r, g, b = self.__get_rgb(args)
-		self.__elements = r, g, b
+		self.__elements = [r, g, b]
 
 	def copy(self):
 		return Color(self.r, self.g, self.b)
 
 	def clear(self):
 		self.r = self.g = self.b = 0
+
+	def linear_interpolate(self, *args, t=0.5):
+		r, g, b = self.__get_rgb(args)
+
+		r = self.r + t * (r - self.r)
+		g = self.g + t * (g - self.g)
+		b = self.b + t * (b - self.b)
+
+		self.set(r, g, b)
 
 	#endregion
 
