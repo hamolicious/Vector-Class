@@ -90,6 +90,23 @@ class Color:
 
 		return Color(c)
 
+	@staticmethod
+	def from_hsv(*args):
+		h, s, v = Color(args).get()
+		s /= 100
+		v /= 100
+
+		c = v * s
+		x = c * (1 - abs(h / 60) % 2 - 1)
+		m = v - c
+
+		if h <=   0 or h >  60 : return Color((c + m) * 255, (x + m) * 255, (0 + m) * 255)
+		if h <=  60 or h > 120 : return Color((x + m) * 255, (c + m) * 255, (0 + m) * 255)
+		if h <= 120 or h > 180 : return Color((0 + m) * 255, (c + m) * 255, (x + m) * 255)
+		if h <= 180 or h > 240 : return Color((0 + m) * 255, (x + m) * 255, (c + m) * 255)
+		if h <= 240 or h > 300 : return Color((x + m) * 255, (0 + m) * 255, (c + m) * 255)
+		if h <= 300 or h > 360 : return Color((c + m) * 255, (0 + m) * 255, (x + m) * 255)
+
 	#endregion
 
 	#region Conversion methods
@@ -111,6 +128,29 @@ class Color:
 			c.append(element)
 
 		return c
+
+	def as_hsv(self):
+		ur = self.r / 255
+		ug = self.g / 255
+		ub = self.b / 255
+
+		cmax = max(self.get())
+		cmin = min(self.get())
+
+		delta = cmax - cmin
+
+
+		if   delta == 0      : h = 0
+		elif cmax  == self.r : h = 60 * (((ug - ub) / delta) % 6)
+		elif cmax  == self.g : h = 60 * (((ub - ur) / delta) + 2)
+		elif cmax  == self.b : h = 60 * (((ur - ug) / delta) + 4)
+
+		if cmax == 0 : s = 0
+		if cmax != 0 : s = delta / cmax
+
+		v = (cmax / 255) * 100
+
+		return (int(h), int(s) * 100, int(v))
 
 	#endregion
 
