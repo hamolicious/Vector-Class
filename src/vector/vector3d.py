@@ -154,6 +154,33 @@ class Vec3d:
 
 	#region Mathematical manipulation methods
 
+	def rotate_x(self, a):
+		x, y, z = self.get()
+		ca = cos(a)
+		sa = sin(a)
+
+		self.x = (1 * x) + (0 * y) + (0 * z)
+		self.y = (0 * x) + (ca * y) + (-sa * z)
+		self.z = (0 * x) + (sa * y) + (ca * z)
+
+	def rotate_y(self, a):
+		x, y, z = self.get()
+		ca = cos(a)
+		sa = sin(a)
+
+		self.x = (ca * x) + (0 * y) + (sa * z)
+		self.y = (0 * x) + (1 * y) + (0 * z)
+		self.z = (-sa * x) + (0 * y) + (ca * z)
+
+	def rotate_z(self, a):
+		x, y, z = self.get()
+		ca = cos(a)
+		sa = sin(a)
+
+		self.x = (ca * x) + (-sa * y) + (0 * z)
+		self.y = (sa * x) + (ca * y) + (0 * z)
+		self.z = (0 * x) + (0 * y) + (1 * z)
+
 	def dist_sqrt(self, *args):
 		x, y, z = self.__get_xyz(args)
 		return sqrt((self.x - x)**2 + (self.y - y)**2 + (self.z - z)**2)
