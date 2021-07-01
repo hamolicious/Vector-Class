@@ -233,3 +233,39 @@ class Color:
 		return f'Color R: {self.r}, G: {self.g}, B: {self.b}'
 
 	#endregion
+
+	#region Mathematical manipulation methods
+	def add(self, *args):
+		r, g, b = self.__get_rgb(args)
+		self.r += r
+		self.g += g
+		self.b += b
+
+	def sub(self, *args):
+		r, g, b = self.__get_rgb(args)
+		self.r -= r
+		self.g -= g
+		self.b -= b
+
+	def mult(self, *args):
+		r, g, b = self.__get_rgb(args)
+		self.r *= r
+		self.g *= g
+		self.b *= b
+
+	def div(self, *args):
+		r, g, b = self.__get_rgb(args)
+		self.r /= r
+		self.g /= g
+		self.b /= b
+
+	def linear_interpolate(self, *args, t=0.5):
+		r, g, b = self.__get_rgb(args)
+
+		r = self.r + t * (r - self.r)
+		g = self.g + t * (g - self.g)
+		b = self.b + t * (b - self.b)
+
+		self.set(r, g, b)
+
+	#endregion
