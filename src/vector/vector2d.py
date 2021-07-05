@@ -118,6 +118,14 @@ class Vec2d:
 
 	#region Mathematical manipulation methods
 
+	def rotate(self, a):
+		x, y = self.get()
+		ca = cos(a)
+		sa = sin(a)
+
+		self.x = (ca * x) + (-sa * y)
+		self.y = (sa * x) + (ca * y)
+
 	def dist_sqrt(self, *args):
 		x, y = self.__get_xy(args)
 		return sqrt((self.x - x)**2 + (self.y - y)**2)
