@@ -154,6 +154,17 @@ class Vec3d:
 
 	#region Mathematical manipulation methods
 
+	def cross_product(self, *args):
+		a = self
+		b = Vec3d(self.__get_xyz(args))
+		c = Vec3d()
+
+		c.x = (a.y * b.z) - (a.z * b.y)
+		c.y = (a.z * b.x) - (a.x * b.z)
+		c.z = (a.x * b.y) - (a.y * b.x)
+
+		return c
+
 	def rotate_x(self, a):
 		x, y, z = self.get()
 		ca = cos(a)
