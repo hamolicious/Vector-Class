@@ -1,5 +1,6 @@
 upload.py
 test.py
+tests/vector
 
 env/
 __pycache__/
