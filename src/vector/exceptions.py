@@ -1,7 +1,0 @@
-
-
-class DimensionsMismatch(Exception):
-	pass
-
-
-
