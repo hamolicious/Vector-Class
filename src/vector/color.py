@@ -1,5 +1,4 @@
 from vector.assistive_functions import get_normal, clamp_value, translate
-from vector.vector2d import Vec2d
 
 class Color:
 	BLACK = (0, 0, 0)
