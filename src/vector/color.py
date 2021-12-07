@@ -233,6 +233,9 @@ class Color:
 	def __repr__(self):
 		return f'Color R: {self.r}, G: {self.g}, B: {self.b}'
 
+	def __call__(self):
+		return self.get()
+
 	#endregion
 
 	#region Mathematical manipulation methods
