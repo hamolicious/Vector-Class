@@ -11,7 +11,7 @@ class Vec3d:
 		if number_of_args == 0:
 			return [0, 0, 0]  # no arguments
 		elif number_of_args == 3:
-	   		return list(args)  # x, y and z passed in
+			return list(args)  # x, y and z passed in
 		elif number_of_args == 1:  # one argument
 			arg_type = type(args[0])
 
@@ -206,7 +206,14 @@ class Vec3d:
 	def normalise(self):
 		mag = self.length
 		if mag == 0 : return
-		self.div(mag)
+		self.idiv(mag)
+
+	def normalised(self):
+		v = self.copy()
+		mag = v.length
+		if mag == 0 : return
+		v.idiv(mag)
+		return v
 
 	def clamp(self, *args):
 		max_x, max_y, max_z = self.__get_xyz(args)
@@ -219,29 +226,54 @@ class Vec3d:
 		if self.y < -max_y : self.y = -max_y
 		if self.z < -max_z : self.z = -max_z
 
-	def add(self, *args):
+	def iadd(self, *args):
 		x, y, z = self.__get_xyz(args)
 		self.x += x
 		self.y += y
 		self.z += z
 
-	def sub(self, *args):
+	def isub(self, *args):
 		x, y, z = self.__get_xyz(args)
 		self.x -= x
 		self.y -= y
 		self.z -= z
 
-	def mult(self, *args):
+	def imult(self, *args):
 		x, y, z = self.__get_xyz(args)
 		self.x *= x
 		self.y *= y
 		self.z *= z
 
-	def div(self, *args):
+	def idiv(self, *args):
 		x, y, z = self.__get_xyz(args)
 		self.x /= x
 		self.y /= y
 		self.z /= z
+
+	def ilerp(self, *args, t=0.5):
+		x, y, z = self.__get_xyz(args)
+
+		x = self.x + t * (x - self.x)
+		y = self.y + t * (y - self.y)
+		z = self.z + t * (y - self.z)
+
+		self.set(x, y, z)
+
+	def add(self, *args):
+		x, y, z = self.__get_xyz(args)
+		return Vec3d(self.x + x, self.y + y, self.z + z)
+
+	def sub(self, *args):
+		x, y, z = self.__get_xyz(args)
+		return Vec3d(self.x - x, self.y - y, self.z - z)
+
+	def mult(self, *args):
+		x, y, z = self.__get_xyz(args)
+		return Vec3d(self.x * x, self.y * y, self.z * z)
+
+	def div(self, *args):
+		x, y, z = self.__get_xyz(args)
+		return Vec3d(self.x / x, self.y / y, self.z / z)
 
 	def lerp(self, *args, t=0.5):
 		x, y, z = self.__get_xyz(args)
@@ -250,7 +282,7 @@ class Vec3d:
 		y = self.y + t * (y - self.y)
 		z = self.z + t * (y - self.z)
 
-		self.set(x, y, z)
+		return Vec3d(x, y, z)
 
 	def dot(self, *args):
 		x, y, z = self.__get_xyz(args)

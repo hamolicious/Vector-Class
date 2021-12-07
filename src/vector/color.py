@@ -1,4 +1,5 @@
 from vector.assistive_functions import get_normal, clamp_value, translate
+from vector.vector2d import Vec2d
 
 class Color:
 	def __get_rgb(self, *args) -> list[float]:
@@ -169,7 +170,7 @@ class Color:
 	def clear(self):
 		self.r = self.g = self.b = 0
 
-	def lerp(self, *args, t=0.5):
+	def ilerp(self, *args, t=0.5):
 		r, g, b = self.__get_rgb(args)
 
 		r = self.r + t * (r - self.r)
@@ -235,29 +236,54 @@ class Color:
 	#endregion
 
 	#region Mathematical manipulation methods
-	def add(self, *args):
+	def iadd(self, *args):
 		r, g, b = self.__get_rgb(args)
 		self.r += r
 		self.g += g
 		self.b += b
 
-	def sub(self, *args):
+	def isub(self, *args):
 		r, g, b = self.__get_rgb(args)
 		self.r -= r
 		self.g -= g
 		self.b -= b
 
-	def mult(self, *args):
+	def imult(self, *args):
 		r, g, b = self.__get_rgb(args)
 		self.r *= r
 		self.g *= g
 		self.b *= b
 
-	def div(self, *args):
+	def idiv(self, *args):
 		r, g, b = self.__get_rgb(args)
 		self.r /= r
 		self.g /= g
 		self.b /= b
+
+	def ilerp(self, *args, t=0.5):
+		r, g, b = self.__get_rgb(args)
+
+		r = self.r + t * (r - self.r)
+		g = self.g + t * (g - self.g)
+		b = self.b + t * (b - self.b)
+
+		self.set(r, g, b)
+
+	def add(self, *args):
+		r, g, b = self.__get_rgb(args)
+		return Color(self.r + r, self.g + g, self.b + b)
+
+	def sub(self, *args):
+		r, g, b = self.__get_rgb(args)
+		return Color(self.r - r, self.g - g, self.b - b)
+
+	def mult(self, *args):
+		r, g, b = self.__get_rgb(args)
+		return Color(self.r * r, self.g * g, self.b * b)
+
+	def div(self, *args):
+		r, g, b = self.__get_rgb(args)
+		return Color(self.r / r, self.g / g, self.b / b)
 
 	def lerp(self, *args, t=0.5):
 		r, g, b = self.__get_rgb(args)
@@ -266,6 +292,6 @@ class Color:
 		g = self.g + t * (g - self.g)
 		b = self.b + t * (b - self.b)
 
-		self.set(r, g, b)
+		return Color(r, g, b)
 
 	#endregion
