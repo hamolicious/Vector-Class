@@ -133,10 +133,10 @@ class Vec3d:
 
 	#region General manipulation methods
 
-	def get(self):
+	def as_floats(self):
 		return list(self.__elements)
 
-	def get_int(self):
+	def as_ints(self):
 		return [int(self.x), int(self.y), int(self.z)]
 
 	def set(self, *args):
@@ -166,7 +166,7 @@ class Vec3d:
 		return c
 
 	def rotate_x(self, a):
-		x, y, z = self.get()
+		x, y, z = self.as_floats()
 		ca = cos(a)
 		sa = sin(a)
 
@@ -175,7 +175,7 @@ class Vec3d:
 		self.z = (0 * x) + (sa * y) + (ca * z)
 
 	def rotate_y(self, a):
-		x, y, z = self.get()
+		x, y, z = self.as_floats()
 		ca = cos(a)
 		sa = sin(a)
 
@@ -184,7 +184,7 @@ class Vec3d:
 		self.z = (-sa * x) + (0 * y) + (ca * z)
 
 	def rotate_z(self, a):
-		x, y, z = self.get()
+		x, y, z = self.as_floats()
 		ca = cos(a)
 		sa = sin(a)
 
@@ -243,7 +243,7 @@ class Vec3d:
 		self.y /= y
 		self.z /= z
 
-	def linear_interpolate(self, *args, t=0.5):
+	def lerp(self, *args, t=0.5):
 		x, y, z = self.__get_xyz(args)
 
 		x = self.x + t * (x - self.x)
@@ -252,7 +252,7 @@ class Vec3d:
 
 		self.set(x, y, z)
 
-	def dot_product(self, *args):
+	def dot(self, *args):
 		x, y, z = self.__get_xyz(args)
 		return sum([self.x * x, self.y * y, self.z * z])
 

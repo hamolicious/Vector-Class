@@ -169,7 +169,7 @@ class Color:
 	def clear(self):
 		self.r = self.g = self.b = 0
 
-	def linear_interpolate(self, *args, t=0.5):
+	def lerp(self, *args, t=0.5):
 		r, g, b = self.__get_rgb(args)
 
 		r = self.r + t * (r - self.r)
@@ -259,7 +259,7 @@ class Color:
 		self.g /= g
 		self.b /= b
 
-	def linear_interpolate(self, *args, t=0.5):
+	def lerp(self, *args, t=0.5):
 		r, g, b = self.__get_rgb(args)
 
 		r = self.r + t * (r - self.r)

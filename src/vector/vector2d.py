@@ -12,7 +12,7 @@ class Vec2d:
 			return [0, 0]  # no arguments
 		elif number_of_args == 2:
 	   		x, y = args
-	   		return [x, y]  # both x and y passed in
+			return [x, y]  # both x and y passed in
 		elif number_of_args == 1:  # one argument
 			arg_type = type(args[0])
 
@@ -97,10 +97,10 @@ class Vec2d:
 
 	#region General manipulation methods
 
-	def get(self):
+	def as_floats(self):
 		return list(self.__elements)
 
-	def get_int(self):
+	def as_ints(self):
 		return [int(self.x), int(self.y)]
 
 	def set(self, *args):
@@ -119,7 +119,7 @@ class Vec2d:
 	#region Mathematical manipulation methods
 
 	def rotate(self, a):
-		x, y = self.get()
+		x, y = self.as_floats()
 		ca = cos(a)
 		sa = sin(a)
 
@@ -174,7 +174,7 @@ class Vec2d:
 		self.x /= x
 		self.y /= y
 
-	def linear_interpolate(self, *args, t=0.5):
+	def lerp(self, *args, t=0.5):
 		x, y = self.__get_xy(args)
 
 		x = self.x + t * (x - self.x)
@@ -182,7 +182,7 @@ class Vec2d:
 
 		self.set(x, y)
 
-	def dot_product(self, *args):
+	def dot(self, *args):
 		x, y = self.__get_xy(args)
 		return sum([self.x * x, self.y * y])
 
